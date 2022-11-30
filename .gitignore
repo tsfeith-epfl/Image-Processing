@@ -33,3 +33,12 @@
 
 # JetBrains folders
 .idea
+cmake*
+
+# libraries
+libraries/*
+!libraries/.gitkeep
+
+# images folder
+images/*
+!images/.gitkeep
