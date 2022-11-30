@@ -38,6 +38,7 @@ cmake*
 # libraries
 libraries/*
 !libraries/.gitkeep
+googletest/
 
 # images folder
 images/*
