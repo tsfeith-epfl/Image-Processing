@@ -32,6 +32,24 @@ TEST_F(applyConvolutionTest, applyConvolution_unitKernel)
     }
 }
 
+// test applyConvolution with a rectangular input
+TEST_F(applyConvolutionTest, applyConvolution_rectangularInput)
+{
+    Eigen::ArrayXXd input = Eigen::ArrayXXd::Zero(5, 7);
+    input(1, 1) = 1;
+    Eigen::ArrayXXd kernel = Eigen::ArrayXXd::Zero(3, 3);
+    kernel(1, 1) = 1;
+    Eigen::ArrayXXd output = applyConvolution(input, kernel);
+    Eigen::ArrayXXd expected = Eigen::ArrayXXd::Zero(5, 7);
+    expected(1, 1) = 1;
+
+    for (int i = 0; i < output.rows(); i++) {
+        for (int j = 0; j < output.cols(); j++) {
+            EXPECT_EQ(output(i, j), expected(i, j));
+        }
+    }
+}
+
 // test errors
 TEST_F(applyConvolutionTest, ErrorEmptyInput)
 {
