@@ -4,7 +4,11 @@ cd libraries
 git clone https://gitlab.com/libeigen/eigen.git
 
 # install opencv
-sudo apt-get install -y libopencv-dev
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    sudo apt-get install -y libopencv-dev
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    brew install opencv
+fi
 
 # install and build googletest (for unit tests)
 cd ..
