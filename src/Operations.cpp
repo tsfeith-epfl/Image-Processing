@@ -9,7 +9,7 @@
 
 Eigen::ArrayXXd applyConvolution(Eigen::ArrayXXd input, Eigen::ArrayXXd kernel) {
     /**
-     * Applies a convolution to an Eigen array, with 0 padding such that the output has the same size as the input.
+     * Applies a convolution to an Eigen array, with 0-padding. The output has the same size as the input.
      */
 
     // error: kernel size must be odd
@@ -37,26 +37,30 @@ Eigen::ArrayXXd applyConvolution(Eigen::ArrayXXd input, Eigen::ArrayXXd kernel) 
         throw std::invalid_argument("empty kernel");
     }
 
+    // this has to work for rectangular inputs
+    int kernel_size = kernel.rows();
+    int kernel_radius = (kernel_size - 1) / 2;
+    int input_rows = input.rows();
+    int input_cols = input.cols();
 
-    int kernelSize = kernel.rows();
-    int kernelCenter = kernelSize / 2;
-    int inputSize = input.rows();
-    int outputSize = inputSize;
-    Eigen::ArrayXXd output = Eigen::ArrayXXd::Zero(outputSize, outputSize);
+    // initialize output
+    Eigen::ArrayXXd output = Eigen::ArrayXXd::Zero(input_rows, input_cols);
 
-    for (int i = 0; i < outputSize; i++) {
-        for (int j = 0; j < outputSize; j++) {
-            for (int k = 0; k < kernelSize; k++) {
-                for (int l = 0; l < kernelSize; l++) {
-                    int input_i = i + k - kernelCenter;
-                    int input_j = j + l - kernelCenter;
-                    if (input_i >= 0 && input_i < inputSize && input_j >= 0 && input_j < inputSize) {
+    // apply convolution
+    for (int i = 0; i < input_rows; i++) {
+        for (int j = 0; j < input_cols; j++) {
+            for (int k = 0; k < kernel_size; k++) {
+                for (int l = 0; l < kernel_size; l++) {
+                    int input_i = i + k - kernel_radius;
+                    int input_j = j + l - kernel_radius;
+                    if (input_i >= 0 && input_i < input_rows && input_j >= 0 && input_j < input_cols) {
                         output(i, j) += input(input_i, input_j) * kernel(k, l);
                     }
                 }
             }
         }
     }
+
     return output;
 }
 
