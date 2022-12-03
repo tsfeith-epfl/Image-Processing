@@ -39,7 +39,3 @@ cmake*
 libraries/*
 !libraries/.gitkeep
 googletest/
-
-# images folder
-images/*
-!images/.gitkeep

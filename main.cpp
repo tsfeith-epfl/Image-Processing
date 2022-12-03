@@ -26,7 +26,3 @@ int main(int argc, char **argv) {
     cv::waitKey(0);
     return 0;
 }
-// Q: How do I get the directory of the current file in C++?
-// A: Use the filesystem library and the current_path() function.
-
-
