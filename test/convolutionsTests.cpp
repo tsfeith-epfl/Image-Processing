@@ -76,7 +76,7 @@ TEST_F(applyConvolutionTest, ErrorKernelSquare)
     EXPECT_THROW(applyConvolution(input_eigen, kernel), std::invalid_argument);
 }
 
-TEST_F(applyConvolutionTest, ErrorKernelSmallerThanInput)
+TEST_F(applyConvolutionTest, ErrorKernelBiggerThanInput)
 {
     Eigen::ArrayXXd kernel = Eigen::ArrayXXd::Zero(6, 6);
     EXPECT_THROW(applyConvolution(input_eigen, kernel), std::invalid_argument);
