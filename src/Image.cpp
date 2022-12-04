@@ -36,7 +36,7 @@ Image::Image(string filename) {
     for (int i = 0; i < this->height; i++) {
         for (int j = 0; j < this->width; j++) {
             for (int k = 0; k < this->channels; k++) {
-                this->data[k](i, j) = image.at<cv::Vec3b>(i, j)[k];
+                this->data[k](i, j) = image.at<cv::Vec3b>(i, j)[k] / 255.0;
             }
         }
     }
