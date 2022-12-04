@@ -53,53 +53,6 @@ Image::Image(int width, int height, int channels) {
     this->data = vector<Eigen::ArrayXXd>(this->channels, Eigen::ArrayXXd::Zero(this->height, this->width));
 }
 
-Image::Image(int width, int height, int channels, vector<Eigen::ArrayXXd> data) {
-    if (width <= 0 || height <= 0 || channels <= 0) {
-        throw std::invalid_argument("Width, height and number of channels must be positive");
-    }
-    if (data.size() != channels) {
-        throw std::invalid_argument("Number of channels does not match data size");
-    }
-    for (int i = 0; i < channels; i++) {
-        if (data[i].rows() != height || data[i].cols() != width) {
-            throw std::invalid_argument("Image dimensions do not match data dimensions");
-        }
-    }
-    for (int i = 0; i < channels; i++) {
-        for (int j = 0; j < height; j++) {
-            for (int k = 0; k < width; k++) {
-                if (data[i](j, k) < 0 || data[i](j, k) > 1) {
-                    throw std::invalid_argument("Pixel values must be between 0 and 1");
-                }
-            }
-        }
-    }
-    this->width = width;
-    this->height = height;
-    this->channels = channels;
-    this->data = data;
-}
-
-Image::Image(int width, int height, int channels, Eigen::ArrayXXd data) {
-    if (width <= 0 || height <= 0 || channels <= 0) {
-        throw std::invalid_argument("Width, height and number of channels must be positive");
-    }
-    if (data.rows() != height || data.cols() != width) {
-        throw std::invalid_argument("Image dimensions do not match data dimensions");
-    }
-    for (int j = 0; j < height; j++) {
-        for (int k = 0; k < width; k++) {
-            if (data(j, k) < 0 || data(j, k) > 1) {
-                throw std::invalid_argument("Pixel values must be between 0 and 1");
-            }
-        }
-    }
-    this->width = width;
-    this->height = height;
-    this->channels = channels;
-    this->data = vector<Eigen::ArrayXXd>(this->channels, data);
-}
-
 Image::Image(int channels, Eigen::ArrayXXd data) {
     if (channels <= 0) {
         throw std::invalid_argument("Number of channels must be positive");
@@ -171,8 +124,6 @@ Image::Image(const Image& image) {
     this->channels = image.channels;
     this->data = image.data;
 }
-
-Image& Image::operator=(const Image& image) = default;
 
 int Image::getWidth() const {
     return this->width;
@@ -336,4 +287,49 @@ void Image::save(string filename) {
 
     cv::Mat image = this->toCvMat();
     cv::imwrite(filename, image);
+}
+
+bool Image::operator==(const Image &image) const {
+    if (this->width != image.width || this->height != image.height || this->channels != image.channels) {
+        return false;
+    }
+    for (int i = 0; i < this->channels; i++) {
+        if (!(this->data[i] == image.data[i]).all()) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool Image::operator!=(const Image &image) const {
+    return !(*this == image);
+}
+
+Image Image::reduceChannels() {
+    if (this->channels == 1) {
+        return *this;
+    }
+    Eigen::ArrayXXd new_data = Eigen::ArrayXXd::Zero(this->height, this->width);
+    if (this->channels != 3) {
+        cerr << "Warning: For images with 3 channels, reduction to 1 channels is done by "
+                "perceptual conversion to grayscale. For images with " << this->channels
+                << " channels, reduction to 1 channel is done by averaging all channels." << endl;
+        for (int i = 0; i < this->height; i++) {
+            for (int j = 0; j < this->width; j++) {
+                for (int k = 0; k < this->channels; k++) {
+                    new_data(i, j) += this->data[k](i, j);
+                }
+                new_data(i, j) /= this->channels;
+            }
+        }
+    }
+    else {
+        for (int i = 0; i < this->height; i++) {
+            for (int j = 0; j < this->width; j++) {
+                // Formula for converting to grayscale from https://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
+                new_data(i, j) = 0.2126 * this->data[0](i, j) + 0.7152 * this->data[1](i, j) + 0.0722 * this->data[2](i, j);
+            }
+        }
+    }
+    return Image(new_data);
 }

@@ -23,8 +23,6 @@ public:
     Image();
     explicit Image(string filename);
     Image(int width, int height, int channels);
-    Image(int width, int height, int channels, vector<Eigen::ArrayXXd> data);
-    Image(int width, int height, int channels, Eigen::ArrayXXd data);
     Image(int channels, Eigen::ArrayXXd data);
     explicit Image(Eigen::ArrayXXd data);
     explicit Image(vector<Eigen::ArrayXXd> data);
@@ -49,12 +47,14 @@ public:
     Eigen::ArrayXXd operator()(int channel) const;
     Eigen::ArrayXd operator()(int x, int y) const;
     double operator()(int x, int y, int channel) const;
-    Image& operator=(const Image& image);
+    bool operator==(const Image& image) const;
+    bool operator!=(const Image& image) const;
 
     // define image related methods
     void show(const string& window_name);
     void save(string filename);
     cv::Mat toCvMat();
+    Image reduceChannels();
 };
 
 
