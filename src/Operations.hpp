@@ -5,9 +5,11 @@
 #ifndef IMAGE_PROCESSING_OPERATIONS_HPP
 #define IMAGE_PROCESSING_OPERATIONS_HPP
 
-/* Convolution Functions */
+#include <Eigen/Eigen>
+#include <vector>
+#include "Image.hpp"
 
 Eigen::ArrayXXd applyConvolution(Eigen::ArrayXXd input, Eigen::ArrayXXd kernel);
-//Image applyConvolution(Image input, Eigen::ArrayXXd kernel);
+Image applyConvolution(const Image& input, const Eigen::ArrayXXd& kernel);
 
 #endif //IMAGE_PROCESSING_OPERATIONS_HPP

@@ -14,28 +14,19 @@ Eigen::ArrayXXd applyConvolution(Eigen::ArrayXXd input, Eigen::ArrayXXd kernel) 
 
     // error: kernel size must be odd
     if (kernel.rows() % 2 == 0 || kernel.cols() % 2 == 0) {
-        throw std::invalid_argument("kernel size must be odd");
+        throw std::invalid_argument("Kernel size must be odd");
     }
 
     // error: kernel size must be smaller than input size
     if (kernel.rows() > input.rows() || kernel.cols() > input.cols()) {
-        throw std::invalid_argument("kernel size must be smaller than input size");
+        throw std::invalid_argument("Kernel size must be smaller than input size");
     }
 
     // error: kernel must be square
     if (kernel.rows() != kernel.cols()) {
-        throw std::invalid_argument("kernel must be square");
+        throw std::invalid_argument("Kernel must be square");
     }
 
-    // error: empty input
-    if (input.rows() == 0 || input.cols() == 0) {
-        throw std::invalid_argument("empty input");
-    }
-
-    // error: empty kernel
-    if (kernel.rows() == 0 || kernel.cols() == 0) {
-        throw std::invalid_argument("empty kernel");
-    }
 
     // this has to work for rectangular inputs
     int kernel_size = kernel.rows();
@@ -62,6 +53,19 @@ Eigen::ArrayXXd applyConvolution(Eigen::ArrayXXd input, Eigen::ArrayXXd kernel) 
     }
 
     return output;
+}
+
+Image applyConvolution(const Image& input, const Eigen::ArrayXXd& kernel) {
+    /**
+     * Applies a convolution to an Image, with 0-padding. The output has the same size as the input.
+     */
+     // There is no need to add all the tests again, since the Image is tested on creation
+     // and the 'applyConvolution' function is tested above.
+     vector<Eigen::ArrayXXd> output = vector<Eigen::ArrayXXd>();
+    for (int i = 0; i < input.getChannels(); i++) {
+        output.push_back(applyConvolution(input.getData(i), kernel));
+    }
+    return Image(output);
 }
 
 
