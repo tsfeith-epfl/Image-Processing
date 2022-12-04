@@ -91,3 +91,15 @@ TEST_F(convolutionsTests, convolutionDirectlyOnImageObjectWorks)
     Image expected = Image(input_eigen);
     EXPECT_EQ(output, expected);
 }
+
+TEST_F(convolutionsTests, convolutionOnMultiChannelImageWorks)
+{
+    Eigen::ArrayXXd input = Eigen::ArrayXXd::Zero(5, 5);
+    input(1, 1) = 1;
+    Image input_image = Image(3, input);
+    Eigen::ArrayXXd kernel = Eigen::ArrayXXd::Zero(3, 3);
+    kernel(1, 1) = 1;
+    Image output = applyConvolution(input_image, kernel);
+    Image expected = Image(3, input);
+    EXPECT_EQ(output, expected);
+}
