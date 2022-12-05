@@ -39,3 +39,7 @@ cmake*
 libraries/*
 !libraries/.gitkeep
 googletest/
+
+# output folder
+output/*
+!output/.gitkeep
