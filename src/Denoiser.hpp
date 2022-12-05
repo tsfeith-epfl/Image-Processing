@@ -1,5 +1,6 @@
 //
 // Created by tsfeith on 04/12/22.
+// Gaussian Denoiser for Image Processing.
 //
 
 #ifndef IMAGEPROCESSING_DENOISER_HPP
