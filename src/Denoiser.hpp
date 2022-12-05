@@ -18,7 +18,7 @@ private:
 
 public:
     Denoiser();
-    Denoiser(int size, double sigma);
+    Denoiser(int size, double sigma); // NOTE: we could use template here to be more flexible in the sigma typing
     explicit Denoiser(const Eigen::ArrayXXd& kernel);
 
     Image denoise(const Image& image);
