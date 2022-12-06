@@ -3,12 +3,7 @@
 cd libraries
 # download eigen
 git clone https://gitlab.com/libeigen/eigen.git
-# install jsoncpp
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    sudo apt-get install libjsoncpp-dev
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-    brew install jsoncpp
-fi
+
 # install opencv
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     sudo apt-get install -y libopencv-dev
