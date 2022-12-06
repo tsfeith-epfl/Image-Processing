@@ -21,7 +21,7 @@ public:
     Denoiser(int size, double sigma); // NOTE: we could use template here to be more flexible in the sigma typing
     explicit Denoiser(const Eigen::ArrayXXd& kernel);
 
-    Image denoise(const Image& image);
+    Image denoise(const Image& image, bool show=false);
     Image denoise(const Image& image, string output, bool show=false);
 
     [[nodiscard]] Eigen::ArrayXXd getKernel() const;

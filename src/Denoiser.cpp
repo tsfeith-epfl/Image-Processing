@@ -69,8 +69,11 @@ Denoiser::Denoiser(const Eigen::ArrayXXd& kernel) {
     this->kernel = kernel;
 }
 
-Image Denoiser::denoise(const Image& image) {
+Image Denoiser::denoise(const Image& image, bool show) {
     Image denoised_image = applyConvolution(image, this->kernel);
+    if (show) {
+        denoised_image.show("Denoised Image");
+    }
     return denoised_image;
 }
 

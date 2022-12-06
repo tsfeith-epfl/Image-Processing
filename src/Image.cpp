@@ -284,7 +284,16 @@ void Image::save(string filename) {
     string dir_path = cpp_path.substr(0, cpp_path.find_last_of("/\\"));
     dir_path = dir_path.substr(0, dir_path.find_last_of("/\\"));
     filename = dir_path + "/images/" + filename;
+    cv::Mat image = this->toCvMat();
+    cv::imwrite(filename, image);
+}
 
+void Image::save(string directory, string filename) {
+    // fix filepath to take into account being in build directory
+    string cpp_path = __FILE__;
+    string dir_path = cpp_path.substr(0, cpp_path.find_last_of("/\\"));
+    dir_path = dir_path.substr(0, dir_path.find_last_of("/\\"));
+    filename = dir_path + "/" + directory + "/" + filename;
     cv::Mat image = this->toCvMat();
     cv::imwrite(filename, image);
 }

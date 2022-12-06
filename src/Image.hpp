@@ -53,6 +53,7 @@ public:
     // define image related methods
     void show(const string& window_name);
     void save(string filename);
+    void save(string directory, string filename);
     cv::Mat toCvMat();
     Image reduceChannels();
 };
