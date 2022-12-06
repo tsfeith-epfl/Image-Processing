@@ -1,2 +1,96 @@
 # Image-Processing
 Repository for the final project of Programming Concepts in Scientific Computing (MATH-458), by Tomás Feith and André Charneca.
+
+## Description
+#TODO - Add description
+
+## Setup
+
+### Dependencies
+This project uses the following libraries:
+- [OpenCV](https://opencv.org/): for image reading and writing
+- [Eigen](http://eigen.tuxfamily.org): for image storing and manipulation (as matrices)
+- [JsonCpp](https://open-source-parsers.github.io/jsoncpp-docs/doxygen/index.html): for reading the JSON file with the parameters
+
+Before building the project, make sure you have the dependencies installed. For that purpose we provide a bash script
+that will install all the dependencies in your system (compatible with Linux and Mac). To run it, simply run
+
+    ./setup.sh
+
+in the root directory of the project. This script will install OpenCV and JsonCpp using the package manager, and will
+download Eigen and place it in the `libraries` folder.
+
+### Building
+We recommend using CLion to build the project. If you are using CLion, simply open the project and build it. If you are
+not using CLion, you can build the project using CMake. To do so, run the following commands in the root directory of 
+the project:
+
+    mkdir build
+    cd build
+    cmake ..
+    make
+
+This will create an executable called `main` in the `build` folder. To run it, simply run
+
+    ./main
+
+in the `build` folder.
+
+## Repo Structure
+
+After setup, the project will have the following structure:
+
+    .
+    ├── build                  # Folder where the executable is created (not necessarily named build)
+    │   └── ...
+    ├── googletest             # Folder with the Google Test library
+    │   └── ...
+    ├── images                 # Folder where the images *must* be placed
+    │   └── ...
+    ├── output                 # Folder where the output images will be placed
+    │   └── ...
+    ├── libraries
+    │   └── eigen
+    ├── src
+    │   ├── Denoiser.cpp
+    │   ├── Denoiser.hpp
+    │   ├── Image.cpp
+    │   ├── Image.hpp
+    │   ├── operations.cpp
+    │   └── operations.hpp
+    ├── test                   # Folder with all the unit tests
+    │   └── ...
+    ├── CMakeLists.txt
+    ├── main.cpp
+    ├── parameters.json
+    ├── README.md
+    └── setup.sh
+
+## Usage
+
+### Parameters
+The parameters for the program are stored in a JSON file called `parameters.json`. It allows to easily tweak the 
+parameters of the program without having to recompile it or pass them as arguments. Each mode of operation has different
+parameters, and they are described below.
+- Denoising
+  - sigma: standard deviation of the Gaussian kernel to apply to the image. Set to 0 to use mean filtering. Default: 1.0
+  - kernel_size: size of the kernel to apply to the image. Default: 3
+- Contour Detection
+  - #TODO - Add parameters
+- Intensity Histogram
+  - bins: number of bins to use in the histogram. Default: 100
+  - range: range of the histogram. Default: [0, 1]
+  - normalize: whether to normalize the histogram. Default: true
+  - log: whether to use a logarithmic scale for the histogram. Default: false
+
+### Running the program
+To run the program, simply run the executable created in the `build` folder. Even though the program reads the parameters
+from the JSON file, there are still some parameters that must be passed as arguments. These are:
+- mode: the mode of operation of the program. OPTIONAL (default: denoising). Possible values:
+  - denoise: denoises the image
+  - contour: detects the contours of the image
+  - intensity_histogram: computes the intensity histogram of the image
+- input: name of the input image (including the extension). REQUIRED
+- output: name of the output image (including the extension). OPTIONAL (default: same as input image)
+
+After running the program, the output will be placed in the `output` folder.
