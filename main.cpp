@@ -72,6 +72,10 @@ int main(int argc, char **argv) {
     if (!filesystem::exists(parameters_path)) {
         parameters_path = "../" + parameters_path;
     }
+    if (!filesystem::exists(parameters_path)) {
+        cout << "Error: Could not find parameters.json file. Make sure it is in the root the project" << endl;
+        return 1;
+    }
     ifstream parameters_file(parameters_path);
     string parameters_string((istreambuf_iterator<char>(parameters_file)), istreambuf_iterator<char>());
     parameters_file.close();
@@ -87,6 +91,20 @@ int main(int argc, char **argv) {
     Image image(input_name);
 
     if (mode == "denoise") {
+        // check if the json file has the correct parameters
+        if (!root.isMember("denoiser") || !root["denoiser"].isMember("kernel_size") || !root["denoiser"].isMember("sigma")) {
+            cout << "Error: parameters.json is missing parameters for denoise mode" << endl;
+            cout << "Make sure it has the following structure:" << endl;
+            cout << "{" << endl;
+            cout << "\t\"denoiser\":" << endl;
+            cout << "\t{" << endl;
+            cout << "\t\t\"kernel_size\": <int>," << endl;
+            cout << "\t\t\"sigma\": <double>" << endl;
+            cout << "\t}" << endl;
+            cout << "..." << endl;
+            cout << "}" << endl;
+            return 1;
+        }
         // show information about what is being done
         cout << "Denoising image: " << input_name << endl;
         cout << "Parameters used for denoising are:" << endl;
@@ -99,19 +117,5 @@ int main(int argc, char **argv) {
         denoised_image.save("output", output_name);
     }
 
-    /*
-    // get directory of the file
-    string cpp_path = __FILE__;
-
-    string dir_path = cpp_path.substr(0, cpp_path.find_last_of("/\\"));
-    cout << "dir_path: " << dir_path << endl;
-
-    std::ifstream f(dir_path + "/images/teapot.png");
-    std::cout << f.good() << std::endl;
-
-    cv::Mat img = cv::imread(dir_path + "/images/teapot.png");
-    cv::imshow("image", img);
-    cv::waitKey(0);
-     */
     return 0;
 }

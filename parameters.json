@@ -1,8 +1,8 @@
 {
   "denoiser":
   {
-    "sigma": 0.5,
-    "kernel_size": 7
+    "sigma": 2, // set to 0 to use mean filter
+    "kernel_size": 5
   },
   "contour_detector":
   {
