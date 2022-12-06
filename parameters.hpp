@@ -9,7 +9,11 @@
 double DENOISER_SIGMA = 1;
 int DENOISER_KERNEL_SIZE = 3;
 
-/* Contour Detector Parameters */
+/* Contour Extractor Parameters */
+double CONTOUR_EXTRACTOR_THRESHOLD = 0.5;
+double CONTOUR_EXTRACTOR_SIGMA = 1;
+int CONTOUR_EXTRACTOR_KERNEL_SIZE = 3;
+
 
 /* Histogram Parameters */
 int HISTOGRAM_BINS = 100;
