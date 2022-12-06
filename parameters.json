@@ -1,0 +1,18 @@
+{
+  "denoiser":
+  {
+    "sigma": 0.5,
+    "kernel_size": 7
+  },
+  "contour_detector":
+  {
+
+  },
+  "intensity_histogram":
+  {
+    "bins": 100,
+    "range": [0, 1],
+    "normalize": true,
+    "log": false
+  }
+}
