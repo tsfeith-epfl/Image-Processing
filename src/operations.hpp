@@ -9,7 +9,7 @@
 #include <vector>
 #include "Image.hpp"
 
-Eigen::ArrayXXd applyConvolution(Eigen::ArrayXXd input, Eigen::ArrayXXd kernel);
+Eigen::ArrayXXd applyConvolution(const Eigen::ArrayXXd input, const Eigen::ArrayXXd kernel);
 Image applyConvolution(const Image& input, const Eigen::ArrayXXd& kernel);
 
 #endif //IMAGE_PROCESSING_OPERATIONS_HPP
