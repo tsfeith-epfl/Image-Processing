@@ -5,9 +5,10 @@
 #include <unistd.h>
 #include <string>
 #include <filesystem>
-#include <Image.hpp>
-#include <Denoiser.hpp>
-#include <jsoncpp/json/json.h>
+#include "Image.hpp"
+#include "Denoiser.hpp"
+#include "parameters.hpp"
+
 
 using namespace std;
 int main(int argc, char **argv) {
@@ -60,6 +61,12 @@ int main(int argc, char **argv) {
     }
     if (output_name.empty()) {
         output_name = input_name;
+
+        // Find the position of the last '.' character in the string
+        size_t dot_pos = output_name.rfind('.');
+
+        // Insert the '_[mode]' string before the last '.' character
+        output_name.insert(dot_pos, "_"+mode);
     }
 
     if (!valid) {
@@ -67,52 +74,19 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    // fix relative path of parameters.json
-    string parameters_path = "parameters.json";
-    if (!filesystem::exists(parameters_path)) {
-        parameters_path = "../" + parameters_path;
-    }
-    if (!filesystem::exists(parameters_path)) {
-        cout << "Error: Could not find parameters.json file. Make sure it is in the root the project" << endl;
-        return 1;
-    }
-    ifstream parameters_file(parameters_path);
-    string parameters_string((istreambuf_iterator<char>(parameters_file)), istreambuf_iterator<char>());
-    parameters_file.close();
-
-    Json::Value root;
-    Json::Reader reader;
-    bool parsingSuccessful = reader.parse(parameters_string, root);
-    if (!parsingSuccessful) {
-        cout << "Error: Failed to parse parameters.json" << endl;
-        return 1;
-    }
 
     Image image(input_name);
 
     if (mode == "denoise") {
-        // check if the json file has the correct parameters
-        if (!root.isMember("denoiser") || !root["denoiser"].isMember("kernel_size") || !root["denoiser"].isMember("sigma")) {
-            cout << "Error: parameters.json is missing parameters for denoise mode" << endl;
-            cout << "Make sure it has the following structure:" << endl;
-            cout << "{" << endl;
-            cout << "\t\"denoiser\":" << endl;
-            cout << "\t{" << endl;
-            cout << "\t\t\"kernel_size\": <int>," << endl;
-            cout << "\t\t\"sigma\": <double>" << endl;
-            cout << "\t}" << endl;
-            cout << "..." << endl;
-            cout << "}" << endl;
-            return 1;
-        }
+
         // show information about what is being done
         cout << "Denoising image: " << input_name << endl;
         cout << "Parameters used for denoising are:" << endl;
-        cout << "\tKernel size: " << root["denoiser"]["kernel_size"].asInt() << endl;
-        cout << "\tSigma: " << root["denoiser"]["sigma"].asDouble() << endl;
+        cout << "\tKernel size: " << DENOISER_KERNEL_SIZE << endl;
+        cout << "\tSigma: " << DENOISER_SIGMA << endl;
         cout << "\tOutput file: " << output_name << endl;
 
-        Denoiser denoiser(root["denoiser"]["kernel_size"].asInt(), root["denoiser"]["sigma"].asDouble());
+        Denoiser denoiser(DENOISER_KERNEL_SIZE, DENOISER_SIGMA);
         Image denoised_image = denoiser.denoise(image, true);
         denoised_image.save("output", output_name);
     }
