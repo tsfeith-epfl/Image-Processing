@@ -18,3 +18,10 @@ mkdir build
 cd build
 cmake ..
 make
+
+# install graphviz for Doxygen
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    sudo apt-get install -y graphviz
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    brew install graphviz
+fi

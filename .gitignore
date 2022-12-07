@@ -43,3 +43,7 @@ googletest/
 # output folder
 output/*
 !output/.gitkeep
+
+# documentation
+documentation/*
+!documentation/.gitkeep
