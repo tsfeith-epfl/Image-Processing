@@ -25,3 +25,17 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     brew install graphviz
 fi
+
+# install Doxygen
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    sudo apt-get install -y doxygen
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    brew install doxygen
+fi
+
+# install CMake
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    sudo apt-get install -y cmake
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    brew install cmake
+fi

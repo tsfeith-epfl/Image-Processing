@@ -22,6 +22,7 @@ private:
     int height;
     int channels;
     vector<Eigen::ArrayXXd> data;
+    bool absolute_path = false;
 
 public:
     Image();

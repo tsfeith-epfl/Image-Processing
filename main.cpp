@@ -88,7 +88,7 @@ int main(int argc, char **argv) {
 
         Denoiser denoiser(DENOISER_KERNEL_SIZE, DENOISER_SIGMA);
         Image denoised_image = denoiser.denoise(image, true);
-        denoised_image.save("output", output_name);
+        denoised_image.save(output_name);
     }
 
     return 0;
