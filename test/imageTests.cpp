@@ -6,8 +6,7 @@
 #include "gtest/gtest.h"
 #include <opencv2/opencv.hpp>
 
-class imageTests : public ::testing::Test
-{
+class imageTests : public ::testing::Test {
 protected:
     void SetUp() override
     {
