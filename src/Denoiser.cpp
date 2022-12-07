@@ -7,7 +7,11 @@
 #include <utility>
 #include "operations.hpp"
 
-
+/*!
+ * @brief Default Constructor for Denoiser
+ * @details Creates a mean filter with a 3x3 kernel.
+ * @return
+ */
 Denoiser::Denoiser() {
     this->kernel = Eigen::ArrayXXd::Zero(3, 3);
     for (int i = 0; i < 3; i++) {
@@ -18,9 +22,11 @@ Denoiser::Denoiser() {
 }
 
 /*!
- * Constructor. Creates a Gaussian Filter with the given kernel size and sigma value.
+ * @brief Parametric constructor for Denoiser
+ * @details Creates a Gaussian Filter with the given kernel size and sigma value.
  * @param size The size of the kernel. Must be odd.
  * @param sigma The sigma value of the Gaussian Filter. Set to 0 to use a mean filter.
+ * @return
  */
 Denoiser::Denoiser(int size, double sigma) {
     if (size % 2 == 0) {
@@ -53,8 +59,8 @@ Denoiser::Denoiser(int size, double sigma) {
     }
 }
 
-/*!
- * Constructor. Uses a custom kernel.
+/*! @brief Custom kernel constructor for Denoiser
+ * @details Creates a Denoiser with a custom kernel.
  * @param kernel The kernel to use. Must be odd. Must be square. Must be normalized.
  */
 Denoiser::Denoiser(const Eigen::ArrayXXd& kernel) {
@@ -80,7 +86,8 @@ Denoiser::Denoiser(const Eigen::ArrayXXd& kernel) {
 }
 
 /*!
- * Denoises the image without saving it.
+ * @brief Denoises the image without saving it.
+ * @details Denoises the image using the kernel of the Denoiser.
  * @param image The image to denoise.
  * @param show Whether to show the denoised image.
  * @return The denoised image.
@@ -93,6 +100,10 @@ Image Denoiser::denoise(const Image& image, bool show) {
     return denoised_image;
 }
 
+/*!
+ * @brief Simple getter for the kernel.
+ * @return The kernel of the Denoiser.
+ */
 Eigen::ArrayXXd Denoiser::getKernel() const {
     return this->kernel;
 }

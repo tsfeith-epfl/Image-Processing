@@ -3,7 +3,7 @@
 //
 
 #include <Eigen/Eigen>
-#include "Operations.hpp"
+#include "operations.hpp"
 
 /* Convolution Functions */
 
