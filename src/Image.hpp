@@ -52,7 +52,7 @@ public:
     bool operator==(const Image& image) const;
     bool operator!=(const Image& image) const;
 
-    void show(const string& window_name = "");
+    void show(const string& window_name = "window");
     void save(string filename);
     void save(string directory, string filename);
     cv::Mat toCvMat();
