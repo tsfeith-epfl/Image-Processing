@@ -39,6 +39,7 @@ Image::Image(string filename) {
     else {
         cout << "File " << filename << " found." << endl;
         need_retry = false;
+        this->absolute_path = true;
     }
     if (need_retry) {
         ifstream file_retry(filename);
@@ -82,6 +83,7 @@ Image::Image(int width, int height, int channels) {
     this->height = height;
     this->channels = channels;
     this->data = vector<Eigen::ArrayXXd>(this->channels, Eigen::ArrayXXd::Zero(this->height, this->width));
+    this->absolute_path = false;
 }
 
 /*!
@@ -426,22 +428,6 @@ void Image::show(const string& window_name) {
 }
 
 /*!
- * @brief Method to save image to a file.
- * @details This method saves the image to a file.
- * @param file_name The name of the file.
- * @return
- */
-void Image::save(string filename) {
-    // fix filepath to take into account being in build directory
-    string cpp_path = __FILE__;
-    string dir_path = cpp_path.substr(0, cpp_path.find_last_of("/\\"));
-    dir_path = dir_path.substr(0, dir_path.find_last_of("/\\"));
-    filename = dir_path + "/images/" + filename;
-    cv::Mat image = this->toCvMat();
-    cv::imwrite(filename, image);
-}
-
-/*!
  * @brief Method to save an image specifying the directory and the filename.
  * @param directory The directory where the image will be saved.
  * @param filename The name of the file.
@@ -455,6 +441,22 @@ void Image::save(string directory, string filename) {
     filename = dir_path + "/" + directory + "/" + filename;
     cv::Mat image = this->toCvMat();
     cv::imwrite(filename, image);
+}
+
+/*!
+ * @brief Method to save an image specifying the filename.
+ * @details This method saves the image either using the absolute path or putting in the './output' directory.
+ * @param filename The name of the file.
+ * @return
+ */
+void Image::save(string filename) {
+    cv::Mat image = this->toCvMat();
+    if (this->absolute_path) {
+        cv::imwrite(filename, image);
+    } else {
+        filename = loc + "/output/" + filename;
+        cv::imwrite(filename, image);
+    }
 }
 
 /*!
