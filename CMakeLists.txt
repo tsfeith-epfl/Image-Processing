@@ -20,3 +20,10 @@ add_executable(test_suite test/convolutionsTests.cpp test/imageTests.cpp test/de
 target_link_libraries(test_suite gtest_main gtest ${OpenCV_LIBS})
 
 add_custom_target(test ./test_suite DEPENDS test_suite)
+
+# build documentation using doxygen
+find_package(Doxygen
+             REQUIRED dot)
+doxygen_add_docs(Doxyfile.in
+                 ${CMAKE_CURRENT_SOURCE_DIR}/src
+                 COMMENT "Generate documentation")
