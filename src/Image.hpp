@@ -11,6 +11,11 @@
 
 using namespace std;
 
+/**
+ * @brief The Image class
+ * @details This class provides basic functionalities for
+ * image storage and manipulation.
+ */
 class Image {
 private:
     int width;
@@ -19,7 +24,6 @@ private:
     vector<Eigen::ArrayXXd> data;
 
 public:
-    // define constructors
     Image();
     explicit Image(string filename);
     Image(int width, int height, int channels);
@@ -28,7 +32,6 @@ public:
     explicit Image(vector<Eigen::ArrayXXd> data);
     Image(const Image& image);
 
-    // define getters
     [[nodiscard]] int getWidth() const;
     [[nodiscard]] int getHeight() const;
     [[nodiscard]] int getChannels() const;
@@ -37,21 +40,18 @@ public:
     [[nodiscard]] Eigen::ArrayXd getPixel(int x, int y) const;
     [[nodiscard]] double getPixel(int x, int y, int channel) const;
 
-    // define setters
     void setData(vector<Eigen::ArrayXXd> new_data);
     void setData(int channel, Eigen::ArrayXXd data);
     void setPixel(int x, int y, Eigen::ArrayXd pixel);
     void setPixel(int x, int y, int channel, double value);
 
-    // define operators
     Eigen::ArrayXXd operator()(int channel) const;
     Eigen::ArrayXd operator()(int x, int y) const;
     double operator()(int x, int y, int channel) const;
     bool operator==(const Image& image) const;
     bool operator!=(const Image& image) const;
 
-    // define image related methods
-    void show(const string& window_name);
+    void show(const string& window_name = "");
     void save(string filename);
     void save(string directory, string filename);
     cv::Mat toCvMat();

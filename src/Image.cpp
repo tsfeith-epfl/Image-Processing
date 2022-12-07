@@ -3,10 +3,14 @@
 //
 
 #include <fstream>
+#include <utility>
 #include "Image.hpp"
 
-// default image is (50 x 50 x 3) full of zeros
-// this is an arbitrary choice
+/*!
+ * @brief Default constructor.
+ * @details This constructor creates an empty image with dimensions (50 x 50 x 3).
+ * The dimensions choice is arbitrary.
+ */
 Image::Image() {
     this->width = 50;
     this->height = 50;
@@ -14,6 +18,11 @@ Image::Image() {
     this->data = vector<Eigen::ArrayXXd>(this->channels, Eigen::ArrayXXd::Zero(this->height, this->width));
 }
 
+/*!
+ * @brief Constructor from filename.
+ * @details This constructor creates an image from a given filename.
+ * @param filename The filename of the image to be loaded.
+ */
 Image::Image(string filename) {
     // fix filepath to take into account being in build directory
     string cpp_path = __FILE__;
@@ -42,7 +51,13 @@ Image::Image(string filename) {
     }
 }
 
-// when no data is given, the image is full of zeros
+/*!
+ * @brief Constructor for empty image with given dimensions.
+ * @details This constructor creates an empty image with given dimensions.
+ * @param width The width of the image. Must be positive.
+ * @param height The height of the image. Must be positive.
+ * @param channels The number of channels of the image. Must be positive.
+ */
 Image::Image(int width, int height, int channels) {
     if (width <= 0 || height <= 0 || channels <= 0) {
         throw std::invalid_argument("Width, height and number of channels must be positive");
@@ -53,6 +68,12 @@ Image::Image(int width, int height, int channels) {
     this->data = vector<Eigen::ArrayXXd>(this->channels, Eigen::ArrayXXd::Zero(this->height, this->width));
 }
 
+/*!
+ * @brief Constructor to replicate an array over multiple channels.
+ * @details This constructor creates an image from the given array and replicates it over the given number of channels.
+ * @param channels The number of channels of the image. Must be positive.
+ * @param data The array to be replicated over all channels. Value must be between in [0, 1].
+ */
 Image::Image(int channels, Eigen::ArrayXXd data) {
     if (channels <= 0) {
         throw std::invalid_argument("Number of channels must be positive");
@@ -73,23 +94,22 @@ Image::Image(int channels, Eigen::ArrayXXd data) {
     this->data = vector<Eigen::ArrayXXd>(this->channels, data);
 }
 
-Image::Image(Eigen::ArrayXXd data) {
-    if (data.cols() == 0 || data.rows() == 0) {
-        throw std::invalid_argument("Data must not be empty");
-    }
-    for (int j = 0; j < data.rows(); j++) {
-        for (int k = 0; k < data.cols(); k++) {
-            if (data(j, k) < 0 || data(j, k) > 1) {
-                throw std::invalid_argument("Pixel values must be between 0 and 1");
-            }
-        }
-    }
-    this->width = data.cols();
-    this->height = data.rows();
-    this->channels = 1;
-    this->data = vector<Eigen::ArrayXXd>(this->channels, data);
-}
+/*!
+ * @brief Constructor to construct a 1-channel image from an array.
+ * @details This constructor creates an image from the given array as a 1-channel image. It is a shortcut to calling
+ * Image(channels, data) with channels = 1.
+ * @param channels The number of channels of the image. Must be positive.
+ * @param data The array to be replicated over all channels. Value must be between in [0, 1].
+ */
+Image::Image(Eigen::ArrayXXd data) : Image(1, std::move(data)) {}
 
+/*!
+ * @brief Constructor to construct an image from a vector of arrays.
+ * @details This constructor creates an image from the given vector of arrays. The number of channels is determined by the
+ * size of the vector. The dimensions of the image are determined by the dimensions of the arrays. They must be consistent
+ * across all channels.
+ * @param data The vector of arrays to be used as the image data. Value must be between in [0, 1].
+ */
 Image::Image(vector<Eigen::ArrayXXd> data) {
     if (data.empty()) {
         throw std::invalid_argument("Data must not be empty");
@@ -118,6 +138,11 @@ Image::Image(vector<Eigen::ArrayXXd> data) {
     this->data = data;
 }
 
+/*!
+ * @brief Simple copy constructor.
+ * @details This constructor creates a copy of the given image.
+ * @param other The image to be copied.
+ */
 Image::Image(const Image& image) {
     this->width = image.width;
     this->height = image.height;
@@ -125,22 +150,48 @@ Image::Image(const Image& image) {
     this->data = image.data;
 }
 
+/*!
+ * @brief Simple width getter.
+ * @details This getter returns the width of the image.
+ * @return The width of the image.
+ */
 int Image::getWidth() const {
     return this->width;
 }
 
+/*!
+ * @brief Simple height getter.
+ * @details This getter returns the height of the image.
+ * @return The height of the image.
+ */
 int Image::getHeight() const {
     return this->height;
 }
 
+/*!
+ * @brief Simple channels getter.
+ * @details This getter returns the number of channels of the image.
+ * @return The number of channels of the image.
+ */
 int Image::getChannels() const {
     return this->channels;
 }
 
+/*!
+ * @brief Simple data getter.
+ * @details This getter returns the data of the image.
+ * @return The data of the image.
+ */
 vector<Eigen::ArrayXXd> Image::getData() const {
     return this->data;
 }
 
+/*!
+ * @brief Simple data getter for a single channel.
+ * @details This getter returns the data of the image for a single channel.
+ * @param channel The channel to be returned. Must be in [0, channels).
+ * @return The data of the image for the given channel.
+ */
 Eigen::ArrayXXd Image::getData(int channel) const {
     if (channel < 0 || channel >= this->channels) {
         throw std::invalid_argument("Channel selected is not valid, must be between 0 and " + to_string(this->channels - 1));
@@ -148,6 +199,13 @@ Eigen::ArrayXXd Image::getData(int channel) const {
     return this->data[channel];
 }
 
+/*!
+ * @brief Simple pixel getter.
+ * @details This getter returns the N-dimensional pixel at the given coordinates.
+ * @param x 'x' coordinate of the pixel. Must be in [0, width).
+ * @param y 'y' coordinate of the pixel. Must be in [0, height).
+ * @return The N-dimensional pixel at the given coordinates.
+ */
 Eigen::ArrayXd Image::getPixel(int x, int y) const {
     if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
         throw std::invalid_argument("Pixel selected is not valid, must be between (0, 0) and (" + to_string(this->width - 1) + ", " + to_string(this->height - 1) + ")");
@@ -159,6 +217,14 @@ Eigen::ArrayXd Image::getPixel(int x, int y) const {
     return pixel;
 }
 
+/*!
+ * @brief Simple pixel getter for a single channel.
+ * @details This getter returns the pixel at the given coordinates for a single channel.
+ * @param x 'x' coordinate of the pixel. Must be in [0, width).
+ * @param y 'y' coordinate of the pixel. Must be in [0, height).
+ * @param channel The channel to be returned. Must be in [0, channels).
+ * @return The pixel at the given coordinates for the given channel.
+ */
 double Image::getPixel(int x, int y, int channel) const {
     if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
         throw std::invalid_argument("Pixel selected is not valid, must be between (0, 0) and (" + to_string(this->width - 1) + ", " + to_string(this->height - 1) + ")");
@@ -169,6 +235,13 @@ double Image::getPixel(int x, int y, int channel) const {
     return this->data[channel](y, x);
 }
 
+/*!
+ * @brief N-dimensional data setter
+ * @details This setter sets the data of the image to the given vector of arrays. The new data needs to be consistent
+ * with the old data (same dimensions, same number of channels), and it still needs to be in [0, 1].
+ * @param data The new data to be set.
+ * @return
+ */
 void Image::setData(vector<Eigen::ArrayXXd> new_data) {
     if (new_data.size() != this->channels) {
         throw std::invalid_argument("Number of channels in new data must match number of channels in image");
@@ -188,6 +261,14 @@ void Image::setData(vector<Eigen::ArrayXXd> new_data) {
     this->data = new_data;
 }
 
+/*!
+ * @brief Single channel data setter
+ * @details This setter sets the data of the image to the given array for a single channel. The new data needs to be
+ * consistent with the old data (same dimensions, valid channel), and it still needs to be in [0, 1].
+ * @param data The new data to be set.
+ * @param channel The channel to be set. Must be in [0, channels).
+ * @return
+ */
 void Image::setData(int channel, Eigen::ArrayXXd new_data) {
     if (channel < 0 || channel >= this->channels) {
         throw std::invalid_argument("Channel selected is not valid, must be between 0 and " + to_string(this->channels - 1));
@@ -205,6 +286,15 @@ void Image::setData(int channel, Eigen::ArrayXXd new_data) {
     this->data[channel] = new_data;
 }
 
+/*!
+ * @brief N-dimensional pixel setter
+ * @details This setter sets the pixel at the given coordinates to the given N-dimensional pixel. The new pixel needs
+ * to be consistent with the old data (same number of channels), and it still needs to be in [0, 1].
+ * @param x 'x' coordinate of the pixel. Must be in [0, width).
+ * @param y 'y' coordinate of the pixel. Must be in [0, height).
+ * @param pixel The new pixel to be set.
+ * @return
+ */
 void Image::setPixel(int x, int y, Eigen::ArrayXd pixel) {
     if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
         throw std::invalid_argument("Pixel selected is not valid, must be between (0, 0) and (" + to_string(this->width - 1) + ", " + to_string(this->height - 1) + ")");
@@ -222,6 +312,16 @@ void Image::setPixel(int x, int y, Eigen::ArrayXd pixel) {
     }
 }
 
+/*!
+ * @brief 1-dimensional pixel setter
+ * @details This setter sets the pixel at the given coordinates to the given value for a single channel. The new pixel
+ * needs to be consistent with the old data (valid channel), and it still needs to be in [0, 1].
+ * @param x 'x' coordinate of the pixel. Must be in [0, width).
+ * @param y 'y' coordinate of the pixel. Must be in [0, height).
+ * @param pixel The new pixel to be set.
+ * @param channel The channel to be set. Must be in [0, channels).
+ * @return
+ */
 void Image::setPixel(int x, int y, int channel, double pixel) {
     if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
         throw std::invalid_argument("Pixel selected is not valid, must be between (0, 0) and (" + to_string(this->width - 1) + ", " + to_string(this->height - 1) + ")");
@@ -235,6 +335,12 @@ void Image::setPixel(int x, int y, int channel, double pixel) {
     this->data[channel](y, x) = pixel;
 }
 
+/*!
+ * @brief Overload () operator for channel access.
+ * @details This overload allows the user to access the data of a single channel of the image using the () operator.
+ * @param channel The channel to be accessed. Must be in [0, channels).
+ * @return The data of the selected channel.
+ */
 Eigen::ArrayXXd Image::operator()(int channel) const {
     if (channel < 0 || channel >= this->channels) {
         throw std::invalid_argument("Channel selected is not valid, must be between 0 and " + to_string(this->channels - 1));
@@ -242,6 +348,12 @@ Eigen::ArrayXXd Image::operator()(int channel) const {
     return this->getData(channel);
 }
 
+/*!
+ * @brief Overload () operator for N-dimensional pixel access.
+ * @param x 'x' coordinate of the pixel. Must be in [0, width).
+ * @param y 'y' coordinate of the pixel. Must be in [0, height).
+ * @return The N-dimensional pixel at the given coordinates.
+ */
 Eigen::ArrayXd Image::operator()(int x, int y) const {
     if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
         throw std::invalid_argument("Pixel selected is not valid, must be between (0, 0) and (" + to_string(this->width - 1) + ", " + to_string(this->height - 1) + ")");
@@ -249,6 +361,13 @@ Eigen::ArrayXd Image::operator()(int x, int y) const {
     return this->getPixel(x, y);
 }
 
+/*!
+ * @brief Overload () operator for 1-dimensional pixel access.
+ * @param x 'x' coordinate of the pixel. Must be in [0, width).
+ * @param y 'y' coordinate of the pixel. Must be in [0, height).
+ * @param channel The channel to be accessed. Must be in [0, channels).
+ * @return The value of the selected channel at the given coordinates.
+ */
 double Image::operator()(int x, int y, int channel) const {
     if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
         throw std::invalid_argument("Pixel selected is not valid, must be between (0, 0) and (" + to_string(this->width - 1) + ", " + to_string(this->height - 1) + ")");
@@ -259,6 +378,12 @@ double Image::operator()(int x, int y, int channel) const {
     return this->getPixel(x, y, channel);
 }
 
+/*!
+ * @brief Method to convert image to OpenCV Mat.
+ * @details This method converts the image to an OpenCV Mat. The image is converted to 8-bit unsigned integer, with
+ * values scaled to [0, 255].
+ * @return The image as an OpenCV Mat.
+ */
 cv::Mat Image::toCvMat() {
     cv::Mat cv_image(this->height, this->width, CV_8UC(this->channels));
     for (int i = 0; i < this->height; i++) {
@@ -271,6 +396,12 @@ cv::Mat Image::toCvMat() {
     return cv_image;
 }
 
+/*!
+ * @brief Method to show image in a window.
+ * @details This method shows the image in a window.
+ * @param window_name The name of the window.
+ * @return
+ */
 void Image::show(const string& window_name) {
     cv::Mat image = this->toCvMat();
     cv::namedWindow(window_name, cv::WINDOW_AUTOSIZE);
@@ -278,6 +409,12 @@ void Image::show(const string& window_name) {
     cv::waitKey(0);
 }
 
+/*!
+ * @brief Method to save image to a file.
+ * @details This method saves the image to a file.
+ * @param file_name The name of the file.
+ * @return
+ */
 void Image::save(string filename) {
     // fix filepath to take into account being in build directory
     string cpp_path = __FILE__;
@@ -288,6 +425,12 @@ void Image::save(string filename) {
     cv::imwrite(filename, image);
 }
 
+/*!
+ * @brief Method to save an image specifying the directory and the filename.
+ * @param directory The directory where the image will be saved.
+ * @param filename The name of the file.
+ * @return
+ */
 void Image::save(string directory, string filename) {
     // fix filepath to take into account being in build directory
     string cpp_path = __FILE__;
@@ -298,6 +441,13 @@ void Image::save(string directory, string filename) {
     cv::imwrite(filename, image);
 }
 
+/*!
+ * @brief Overload == operator.
+ * @details This overload allows the user to compare two images using the == operator. It checks if the images
+ * have the same dimensions and channels, and if the data is the same.
+ * @param image The image to be compared.
+ * @return True if the images are the same, false otherwise.
+ */
 bool Image::operator==(const Image &image) const {
     if (this->width != image.width || this->height != image.height || this->channels != image.channels) {
         return false;
@@ -310,10 +460,25 @@ bool Image::operator==(const Image &image) const {
     return true;
 }
 
+/*!
+ * @brief Overload != operator.
+ * @details This overload allows the user to compare two images using the != operator. It just does the negative
+ * of the == operator.
+ * @param image The image to be compared.
+ * @return True if the images are different, false otherwise.
+ */
 bool Image::operator!=(const Image &image) const {
     return !(*this == image);
 }
 
+/*!
+ * @brief Method to get a reduced (i.e. single-channel) version of the image.
+ * @details This method returns a reduced version of the image, with only one channel. If the image is already
+ * single-channel, it returns a pointer to the same image. If the image has 3 channels, it performs a weighted mean
+ * following a visual perception model (i.e. the human eye is more sensitive to green than red or blue). Otherwise,
+ * it returns a simple mean of all the channels.
+ * @return an Image object with only one channel.
+ */
 Image Image::reduceChannels() {
     if (this->channels == 1) {
         return *this;
