@@ -1,5 +1,5 @@
 #include <cmath>
-#include "Operations.cpp"
+#include "operations.cpp"
 #include "gtest/gtest.h"
 
 /* Testing Operations.cpp */
