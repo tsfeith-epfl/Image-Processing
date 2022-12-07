@@ -23,7 +23,7 @@ target_link_libraries(andre ${OpenCV_LIBS})
 
 # build test suite
 add_subdirectory(googletest)
-add_executable(test_suite test/convolutionsTests.cpp test/imageTests.cpp test/denoiserTests.cpp src/operations.hpp src/Image.hpp src/Denoiser.cpp test/contourExtractorTests.cpp src/ContourExtractor.cpp)
+add_executable(test_suite test/convolutionsTests.cpp test/imageTests.cpp test/denoiserTests.cpp src/operations.hpp src/Image.hpp src/Denoiser.cpp test/contourExtractorTests.cpp src/ContourExtractor.cpp test/gradientTests.cpp)
 target_link_libraries(test_suite gtest_main gtest ${OpenCV_LIBS})
 
 add_custom_target(test ./test_suite DEPENDS test_suite)
