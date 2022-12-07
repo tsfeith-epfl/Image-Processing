@@ -4,6 +4,9 @@ project(ImageProcessing CXX)
 set(CMAKE_CXX_STANDARD 17)
 include_directories(src)
 
+file(WRITE ${CMAKE_SOURCE_DIR}/src/location.hpp
+        "#include<string>\nstd::string loc=\"${CMAKE_SOURCE_DIR}\";")
+
 # add eigen
 include_directories(libraries/eigen)
 

@@ -5,6 +5,7 @@
 #include <fstream>
 #include <utility>
 #include "Image.hpp"
+#include "location.hpp"
 
 /*!
  * @brief Default constructor.
@@ -20,23 +21,38 @@ Image::Image() {
 
 /*!
  * @brief Constructor from filename.
- * @details This constructor creates an image from a given filename.
+ * @details This constructor creates an image from a given filename. It
+ * first tries to open the image assuming 'filename' is the absolute path.
+ * If it fails, then it looks in the 'images' folder for it.
  * @param filename The filename of the image to be loaded.
  */
 Image::Image(string filename) {
-    // fix filepath to take into account being in build directory
-    string cpp_path = __FILE__;
-    string dir_path = cpp_path.substr(0, cpp_path.find_last_of("/\\"));
-    dir_path = dir_path.substr(0, dir_path.find_last_of("/\\"));
-    filename = dir_path + "/images/" + filename;
-
+    // first try opening the file assuming the user gave the full path
+    cout << "Trying to open " << filename << endl;
     ifstream file(filename);
+    bool need_retry;
     if (!file.good()) {
-        throw invalid_argument("File " + filename + " does not exist.");
+        filename = loc + "/images/" + filename;
+        cout << "File not found.\nTrying to open " << filename << endl;
+        need_retry = true;
+    }
+    else {
+        cout << "File " << filename << " found." << endl;
+        need_retry = false;
+    }
+    if (need_retry) {
+        ifstream file_retry(filename);
+        if (!file_retry.good()) {
+            throw invalid_argument(
+                    "File not found. Make sure to either give the absolute path or place the file in the images folder.");
+        }
+        else {
+            cout << "File " << filename << " found.\n" << endl;
+        }
     }
     cv::Mat image = cv::imread(filename);
     if (image.empty()) {
-        throw invalid_argument("Could not open or find the image");
+        throw invalid_argument("Could not open the image.");
     }
     this->width = image.cols;
     this->height = image.rows;
