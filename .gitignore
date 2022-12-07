@@ -47,3 +47,5 @@ output/*
 # documentation
 documentation/*
 !documentation/.gitkeep
+
+src/location.hpp
