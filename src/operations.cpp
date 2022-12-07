@@ -68,4 +68,87 @@ Image applyConvolution(const Image& input, const Eigen::ArrayXXd& kernel) {
     return Image(output);
 }
 
+/* Gradient Operations */
+
+Image computeGradientX(const Image& input){
+    /**
+     * Computes the gradient in the x-direction of an Image.
+     */
+    // error: input must be grayscale
+    if (input.getChannels() != 1) {
+        throw std::invalid_argument("Input must be grayscale");
+    }
+
+    // initialize Sobel kernel
+    Eigen::ArrayXXd kernel = Eigen::ArrayXXd::Zero(3, 3);
+    kernel << -1, 0, 1,
+              -2, 0, 2,
+              -1, 0, 1;
+
+    // apply convolution
+    return applyConvolution(input, kernel);
+}
+
+Image computeGradientY(const Image& input){
+    /**
+     * Computes the gradient in the y-direction of an Image.
+     */
+    // error: input must be grayscale
+    if (input.getChannels() != 1) {
+        throw std::invalid_argument("Input must be grayscale");
+    }
+
+    // initialize Sobel kernel
+    Eigen::ArrayXXd kernel = Eigen::ArrayXXd::Zero(3, 3);
+    kernel << -1, -2, -1,
+               0,  0,  0,
+               1,  2,  1;
+
+    // apply convolution
+    return applyConvolution(input, kernel);
+}
+
+Image computeGradientMagnitude(const Image& input){
+    /**
+     * Computes the gradient magnitude of a grayscale Image.
+     */
+    // compute gradient in x and y direction
+    Image gradient_x = computeGradientX(input);
+    Image gradient_y = computeGradientY(input);
+
+    // initialize output
+    Eigen::ArrayXXd output = Eigen::ArrayXXd::Zero(input.getHeight(), input.getWidth());
+
+    // compute gradient magnitude
+    for (int i = 0; i < input.getHeight(); i++) {
+        for (int j = 0; j < input.getWidth(); j++) {
+            output(i, j) = sqrt(pow(gradient_x.getData(0)(i, j), 2) + pow(gradient_y.getData(0)(i, j), 2));
+        }
+    }
+
+    return Image(output);
+}
+
+Image computeGradientDirection(const Image& input){
+    /**
+     * Computes the gradient direction of a grayscale Image, in degrees.
+     */
+
+    // compute gradient in x and y direction
+    Image gradient_x = computeGradientX(input);
+    Image gradient_y = computeGradientY(input);
+
+    // initialize output
+    Eigen::ArrayXXd output = Eigen::ArrayXXd::Zero(input.getHeight(), input.getWidth());
+
+    // compute gradient direction
+    for (int i = 0; i < input.getHeight(); i++) {
+        for (int j = 0; j < input.getWidth(); j++) {
+            output(i, j) = atan2(gradient_y.getData(0)(i, j), gradient_x.getData(0)(i, j)) * 180 / M_PI;
+        }
+    }
+
+    return Image(output);
+}
+
 
