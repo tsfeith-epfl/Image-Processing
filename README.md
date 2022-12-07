@@ -10,7 +10,6 @@ Repository for the final project of Programming Concepts in Scientific Computing
 This project uses the following libraries:
 - [OpenCV](https://opencv.org/): for image reading and writing
 - [Eigen](http://eigen.tuxfamily.org): for image storing and manipulation (as matrices)
-- [JsonCpp](https://open-source-parsers.github.io/jsoncpp-docs/doxygen/index.html): for reading the JSON file with the parameters
 
 Before building the project, make sure you have the dependencies installed. For that purpose we provide a bash script
 that will install all the dependencies in your system (compatible with Linux and Mac). To run it, simply run
@@ -62,14 +61,14 @@ After setup, the project will have the following structure:
     │   └── ...
     ├── CMakeLists.txt
     ├── main.cpp
-    ├── parameters.json
+    ├── parameters.hpp
     ├── README.md
     └── setup.sh
 
 ## Usage
 
 ### Parameters
-The parameters for the program are stored in a JSON file called `parameters.json`. It allows to easily tweak the 
+The parameters for the program are stored in a .hpp file called `parameters.hpp`. It allows to easily tweak the 
 parameters of the program without having to recompile it or pass them as arguments. Each mode of operation has different
 parameters, and they are described below.
 - Denoising
@@ -85,7 +84,7 @@ parameters, and they are described below.
 
 ### Running the program
 To run the program, simply run the executable created in the `build` folder. Even though the program reads the parameters
-from the JSON file, there are still some parameters that must be passed as arguments. These are:
+from the parameters.hpp` file, there are still some parameters that must be passed as arguments. These are:
 - mode: the mode of operation of the program. OPTIONAL (default: denoising). Possible values:
   - denoise: denoises the image
   - contour: detects the contours of the image
