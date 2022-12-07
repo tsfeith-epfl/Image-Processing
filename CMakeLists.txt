@@ -14,20 +14,12 @@ include_directories(libraries/eigen)
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-<<<<<<< HEAD
-## Note: remove andre.cpp before submission
-add_executable(andre andre.cpp src/operations.cpp src/Image.cpp src/Denoiser.cpp parameters.hpp src/ContourExtractor.cpp)
-target_link_libraries(andre ${OpenCV_LIBS})
-add_executable(main main.cpp src/operations.cpp src/Image.cpp src/Denoiser.cpp parameters.hpp src/ContourExtractor.cpp)
-target_link_libraries(main ${OpenCV_LIBS})
-=======
 add_executable(main main.cpp src/operations.cpp src/Image.cpp src/Denoiser.cpp parameters.hpp src/ContourExtractor.cpp)
 target_link_libraries(main ${OpenCV_LIBS})
 
 # REMOVE BEFORE SUBMISSION
 add_executable(andre andre.cpp src/operations.cpp src/Image.cpp src/Denoiser.cpp parameters.hpp src/ContourExtractor.cpp)
 target_link_libraries(andre ${OpenCV_LIBS})
->>>>>>> 48df5e442bb4a49e1b8681de1edee1305621e47a
 
 # build test suite
 add_subdirectory(googletest)
