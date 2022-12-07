@@ -5,7 +5,8 @@
 #include "Denoiser.hpp"
 
 #include <utility>
-#include "Operations.hpp"
+#include "operations.hpp"
+
 
 Denoiser::Denoiser() {
     this->kernel = Eigen::ArrayXXd::Zero(3, 3);
@@ -16,6 +17,11 @@ Denoiser::Denoiser() {
     }
 }
 
+/*!
+ * Constructor. Creates a Gaussian Filter with the given kernel size and sigma value.
+ * @param size The size of the kernel. Must be odd.
+ * @param sigma The sigma value of the Gaussian Filter. Set to 0 to use a mean filter.
+ */
 Denoiser::Denoiser(int size, double sigma) {
     if (size % 2 == 0) {
         throw invalid_argument("Kernel size must be odd");
@@ -47,6 +53,10 @@ Denoiser::Denoiser(int size, double sigma) {
     }
 }
 
+/*!
+ * Constructor. Uses a custom kernel.
+ * @param kernel The kernel to use. Must be odd. Must be square. Must be normalized.
+ */
 Denoiser::Denoiser(const Eigen::ArrayXXd& kernel) {
     if (kernel.rows() == 0 || kernel.cols() == 0) {
         throw invalid_argument("Kernel cannot be empty");
@@ -69,19 +79,16 @@ Denoiser::Denoiser(const Eigen::ArrayXXd& kernel) {
     this->kernel = kernel;
 }
 
+/*!
+ * Denoises the image without saving it.
+ * @param image The image to denoise.
+ * @param show Whether to show the denoised image.
+ * @return The denoised image.
+ */
 Image Denoiser::denoise(const Image& image, bool show) {
     Image denoised_image = applyConvolution(image, this->kernel);
     if (show) {
         denoised_image.show("Denoised Image");
-    }
-    return denoised_image;
-}
-
-Image Denoiser::denoise(const Image& image, string output, bool show) {
-    Image denoised_image = applyConvolution(image, this->kernel);
-    denoised_image.save(std::move(output));
-    if (show) {
-        denoised_image.show("Denoised image");
     }
     return denoised_image;
 }
