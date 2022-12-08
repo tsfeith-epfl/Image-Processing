@@ -4,13 +4,24 @@
 
 #include "Histogram.hpp"
 
+/*!
+ * @brief Default constructor for the Histogram class
+ * @details This constructor sets the default values for the Histogram class.
+ * The default values are 500 bins, a range from 0. to 1. and a linear scale.
+ */
 Histogram::Histogram() {
-    this->bins = 100;
+    this->bins = 500;
     this->min_range = 0;
     this->max_range = 1;
     this->log = false;
 }
 
+/*!
+ * @brief Constructor for the Histogram class
+ * @details This constructor sets the number of bins for the Histogram class.
+ * The range is set to [0, 1] and the scale is linear.
+ * @param bins Number of bins for the histogram
+ */
 Histogram::Histogram(int bins) : Histogram() {
     if (bins <= 0) {
         throw invalid_argument("Number of bins must be greater than 0");
@@ -18,6 +29,14 @@ Histogram::Histogram(int bins) : Histogram() {
     this->bins = bins;
 }
 
+/*!
+ * @brief Constructor for the Histogram class
+ * @details This constructor sets the number of bins and the range for the Histogram class.
+ * The scale is linear.
+ * @param bins Number of bins for the histogram
+ * @param min_range Minimum value of the range
+ * @param max_range Maximum value of the range
+ */
 Histogram::Histogram(int bins, double min_range, double max_range) : Histogram(bins) {
     if (min_range >= max_range) {
         throw invalid_argument("Min range must be smaller than max range");
@@ -29,26 +48,54 @@ Histogram::Histogram(int bins, double min_range, double max_range) : Histogram(b
     this->max_range = max_range;
 }
 
+/*!
+ * @brief Constructor for the Histogram class
+ * @details This constructor sets the number of bins, the range and the scale for the Histogram class.
+ * @param bins Number of bins for the histogram
+ * @param min_range Minimum value of the range
+ * @param max_range Maximum value of the range
+ * @param log Boolean to choose the scale of the histogram
+ */
 Histogram::Histogram(int bins, double min_range, double max_range, bool log) : Histogram(bins, min_range, max_range) {
     this->log = log;
 }
 
+/*!
+ * @brief Getter for the number of bins
+ * @return Number of bins
+ */
 int Histogram::getBins() const {
     return this->bins;
 }
 
+/*!
+ * @brief Getter for the minimum value of the range
+ * @return Minimum value of the range
+ */
 double Histogram::getMinRange() const {
     return this->min_range;
 }
 
+/*!
+ * @brief Getter for the maximum value of the range
+ * @return Maximum value of the range
+ */
 double Histogram::getMaxRange() const {
     return this->max_range;
 }
 
+/*!
+ * @brief Getter for the scale of the histogram
+ * @return Boolean to choose the scale of the histogram
+ */
 bool Histogram::getLog() const {
     return this->log;
 }
 
+/*!
+ * @brief Setter for the number of bins
+ * @param bins Number of bins
+ */
 void Histogram::setBins(int bins) {
     if (bins <= 0) {
         throw invalid_argument("Number of bins must be greater than 0");
@@ -56,6 +103,10 @@ void Histogram::setBins(int bins) {
     this->bins = bins;
 }
 
+/*!
+ * @brief Setter for the minimum value of the range
+ * @param min_range Minimum value of the range
+ */
 void Histogram::setMinRange(double min_range) {
     if (min_range >= this->max_range) {
         throw invalid_argument("Min range must be smaller than max range");
@@ -66,6 +117,10 @@ void Histogram::setMinRange(double min_range) {
     this->min_range = min_range;
 }
 
+/*!
+ * @brief Setter for the maximum value of the range
+ * @param max_range Maximum value of the range
+ */
 void Histogram::setMaxRange(double max_range) {
     if (max_range <= this->min_range) {
         throw invalid_argument("Max range must be greater than min range");
@@ -76,16 +131,26 @@ void Histogram::setMaxRange(double max_range) {
     this->max_range = max_range;
 }
 
+/*!
+ * @brief Setter for the scale of the histogram
+ * @param log Boolean to choose the scale of the histogram
+ */
 void Histogram::setLog(bool log) {
     this->log = log;
 }
 
+/*!
+ * @brief Function to compute the histogram of an image
+ * @details This function computes the histogram of an image and returns it as a vector.
+ * Each element of the vector contains another vector with the bin value and the number
+ * of pixel in that bin. If the image provided is RGB, it is first converted to grayscale.
+ * @param image Image to compute the histogram
+ * @return Histogram of the image
+ */
 vector<vector<double>> Histogram::computeHistogram(Image image) const {
     vector<vector<double>> output;
     image = image.reduceChannels();
-    // fill in the output with bin values
     for (int i = 0; i < this->bins; i++) {
-        // set values with only 3 decimal places
         output.push_back({this->min_range + i * (this->max_range - this->min_range), 0});
     }
 
@@ -104,10 +169,24 @@ vector<vector<double>> Histogram::computeHistogram(Image image) const {
     return output;
 }
 
+/*!
+ * @brief Function to show and save the histogram of an image
+ * @details This function takes an image and plots the histogram of it.
+ * It also saves the histogram in a file.
+ * @param image
+ * @param output
+ */
 void Histogram::getHistogram(const Image &image, const string& output) const {
     vector<vector<double>> hist = this->computeHistogram(image);
     // plot histogram using gnuplot
     FILE *gnuplotPipe = popen("gnuplot -persistent", "w");
+    if (!output.empty()) {
+        fprintf(gnuplotPipe, "set terminal png size 800,600\n");
+        fprintf(gnuplotPipe, "set output '%s'\n", output.c_str());
+    }
+    else {
+        fprintf(gnuplotPipe, "set terminal qt size 800,600\n");
+    }
     fprintf(gnuplotPipe, "set terminal png size 800,600\n");
     fprintf(gnuplotPipe, "set output '%s'\n", output.c_str());
     fprintf(gnuplotPipe, "set style fill solid 1.0 border -1\n");
@@ -132,10 +211,11 @@ void Histogram::getHistogram(const Image &image, const string& output) const {
     }
     fprintf(gnuplotPipe, "e\n");
 
-    // save plot to output file
-    fprintf(gnuplotPipe, "set terminal qt size 800,600\n");
-    fprintf(gnuplotPipe, "set output\n");
-    fprintf(gnuplotPipe, "replot\n");
+    if (!output.empty()) {
+        fprintf(gnuplotPipe, "set terminal qt size 800,600\n");
+        fprintf(gnuplotPipe, "set output\n");
+        fprintf(gnuplotPipe, "replot\n");
+    }
 
     fflush(gnuplotPipe);
     pclose(gnuplotPipe);

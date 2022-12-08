@@ -9,6 +9,15 @@
 #include <fstream>
 #include <Eigen/Eigen>
 
+
+/**
+ * @brief The Histogram class
+ * @details This class allows to extract an intensity histogram from an image.
+ * If the image is RGB, it first converts it to grayscale. The histogram is
+ * built with a given number of bins and a given range. The range is given
+ * by the minimum and maximum values of the histogram. It is also possible to
+ * choose for the y-scale to be logarithmic.
+ */
 class Histogram {
 private:
     int bins;
@@ -18,7 +27,7 @@ private:
 
 public:
     Histogram();
-    Histogram(int bins);
+    explicit Histogram(int bins);
     Histogram(int bins, double min_range, double max_range);
     Histogram(int bins, double min_range, double max_range, bool log);
 
@@ -34,7 +43,7 @@ public:
 
     [[nodiscard]] vector<vector<double>> computeHistogram(Image image) const;
 
-    void getHistogram(const Image& image, const string& output) const;
+    void getHistogram(const Image& image, const string& output = "") const;
 
 };
 
