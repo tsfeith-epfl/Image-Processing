@@ -39,3 +39,10 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     brew install cmake
 fi
+
+# install gnuplot
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    sudo apt-get install -y gnuplot
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    brew install gnuplot
+fi

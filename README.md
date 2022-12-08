@@ -11,6 +11,7 @@ This project uses the following libraries:
 - [CMake](https://cmake.org/): a cross-platform build system generator.
 - [OpenCV](https://opencv.org/): for image reading and writing
 - [Eigen](http://eigen.tuxfamily.org): for image storing and manipulation (as matrices)
+- [gnuplot](http://www.gnuplot.info/): for plotting the intensity histograms
 - [Doxygen](http://www.doxygen.nl/): for documentation generation
 - [GraphViz](https://www.graphviz.org/): needed for building documentation with Doxygen
 
