@@ -50,7 +50,10 @@ Image::Image(string filename) {
         else {
             cout << "File " << filename << " found.\n" << endl;
         }
+        file_retry.close();
     }
+    file.close();
+    this->path = filename;
     cv::Mat image = cv::imread(filename);
     if (image.empty()) {
         throw invalid_argument("Could not open the image.");
@@ -251,6 +254,25 @@ double Image::getPixel(int x, int y, int channel) const {
         throw std::invalid_argument("Channel selected is not valid, must be between 0 and " + to_string(this->channels - 1));
     }
     return this->data[channel](y, x);
+}
+
+/*!
+ * @brief Get image path
+ * @details If the image was created from an image file, this method returns the absolute path to the image file.
+ * Otherwise it returns an empty string.
+ * @return The absolute path to the image file.
+ */
+string Image::getPath() const {
+    return this->path;
+}
+
+/*!
+ * @brief Was an absolute path provided?
+ * @details If the image was created from an image file using an absolute path, this method returns true. If if was
+ * created using a relative path or from a vector of arrays, it returns false.
+ */
+ bool Image::usedAbsolutePath() const {
+    return this->absolute_path;
 }
 
 /*!

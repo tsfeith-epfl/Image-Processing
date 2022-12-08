@@ -23,6 +23,7 @@ private:
     int channels;
     vector<Eigen::ArrayXXd> data;
     bool absolute_path = false;
+    string path;
 
 public:
     Image();
@@ -40,6 +41,8 @@ public:
     [[nodiscard]] Eigen::ArrayXXd getData(int channel) const;
     [[nodiscard]] Eigen::ArrayXd getPixel(int x, int y) const;
     [[nodiscard]] double getPixel(int x, int y, int channel) const;
+    [[nodiscard]] string getPath() const;
+    [[nodiscard]] bool usedAbsolutePath() const;
 
     void setData(vector<Eigen::ArrayXXd> new_data);
     void setData(int channel, Eigen::ArrayXXd data);
