@@ -133,15 +133,10 @@ TEST_F(denoiserTests, denoiseReturnsImageForUnitKernel) {
     }
 }
 
-TEST_F(denoiserTests, denoiseAndSaveOutputIsSavingImage) {
-    Denoiser denoiser(3, 1);
-    denoiser.denoise(unit_image, "test.png");
-}
-
-TEST_F(denoiserTests, denoiseAndSaveCanHnadleLargerImages) {
+TEST_F(denoiserTests, denoiserCanHandleLargerImages) {
     Denoiser denoiser(5, 1);
     Image image = Image("teapot.png");
-    denoiser.denoise(image, "test.png");
+    denoiser.denoise(image);
 }
 
 TEST_F(denoiserTests, getKernelWorks) {
