@@ -143,7 +143,7 @@ void Histogram::setLog(bool log) {
  * @brief Function to compute the histogram of an image
  * @details This function computes the histogram of an image and returns it as a vector.
  * Each element of the vector contains another vector with the bin value and the number
- * of pixel in that bin. If the image provided is RGB, it is first converted to grayscale.
+ * of pixels in that bin. If the image provided is RGB, it is first converted to grayscale.
  * @param image Image to compute the histogram
  * @return Histogram of the image
  */
@@ -173,8 +173,8 @@ vector<vector<double>> Histogram::computeHistogram(Image image) const {
  * @brief Function to show and save the histogram of an image
  * @details This function takes an image and plots the histogram of it.
  * It also saves the histogram in a file.
- * @param image
- * @param output
+ * @param image Image to compute the histogram
+ * @param output Path to save the histogram
  */
 void Histogram::getHistogram(const Image &image, const string& output) const {
     vector<vector<double>> hist = this->computeHistogram(image);

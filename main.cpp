@@ -1,10 +1,7 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
-#include <fstream>
-#include <sys/stat.h>
 #include <unistd.h>
 #include <string>
-#include <filesystem>
 #include "Image.hpp"
 #include "Denoiser.hpp"
 #include "Histogram.hpp"
@@ -83,7 +80,6 @@ int main(int argc, char **argv) {
         if (!image.usedAbsolutePath()) {
             string image_path = image.getPath();
             size_t before_last_slash = image_path.find_last_of('/', image_path.find_last_of('/') - 1);
-            size_t last_slash = image_path.find_last_of('/');
             output_name = image_path.substr(0, before_last_slash + 1) + "output/" + output_name;
         }
     }
