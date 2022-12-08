@@ -16,10 +16,9 @@ int CONTOUR_EXTRACTOR_KERNEL_SIZE = 3;
 
 
 /* Histogram Parameters */
-int HISTOGRAM_BINS = 100;
-double HISTOGRAM_MIN = 0;
+int HISTOGRAM_BINS = 500;
+double HISTOGRAM_MIN = 0.2;
 double HISTOGRAM_MAX = 1;
-bool HISTOGRAM_NORMALIZE = true;
-bool HISTOGRAM_LOG_Y = false;
+bool LOG_SCALE = false;
 
 #endif //IMAGEPROCESSING_PARAMETERS_HPP
