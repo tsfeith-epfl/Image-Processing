@@ -438,31 +438,26 @@ cv::Mat Image::toCvMat() {
 
 /*!
  * @brief Method to show image in a window.
- * @details This method shows the image in a window.
+ * @details This method shows the image in a window. If the image is grayscale, it is converted to 3 identical channels
+ * to be displayed as RGB. If the image has channels other than 1 or 3, an exception is thrown.an
  * @param window_name The name of the window.
  * @return
  */
 void Image::show(const string& window_name) {
-    cv::Mat image = this->toCvMat();
+    cv::Mat image;
+    if (this->channels == 1) {
+        Image expanded_image(3, this->data[0]);
+        image = expanded_image.toCvMat();
+    }
+    else if (this->channels == 3) {
+        image = this->toCvMat();
+    }
+    else {
+        throw std::invalid_argument("Image must have 1 or 3 channels for show to work");
+    }
     cv::namedWindow(window_name, cv::WINDOW_AUTOSIZE);
     cv::imshow(window_name, image);
     cv::waitKey(0);
-}
-
-/*!
- * @brief Method to save an image specifying the directory and the filename.
- * @param directory The directory where the image will be saved.
- * @param filename The name of the file.
- * @return
- */
-void Image::save(string directory, string filename) {
-    // fix filepath to take into account being in build directory
-    string cpp_path = __FILE__;
-    string dir_path = cpp_path.substr(0, cpp_path.find_last_of("/\\"));
-    dir_path = dir_path.substr(0, dir_path.find_last_of("/\\"));
-    filename = dir_path + "/" + directory + "/" + filename;
-    cv::Mat image = this->toCvMat();
-    cv::imwrite(filename, image);
 }
 
 /*!
@@ -472,7 +467,17 @@ void Image::save(string directory, string filename) {
  * @return
  */
 void Image::save(string filename) {
-    cv::Mat image = this->toCvMat();
+    cv::Mat image;
+    if (this->channels == 1) {
+        Image expanded_image(3, this->data[0]);
+        image = expanded_image.toCvMat();
+    }
+    else if (this->channels == 3) {
+        image = this->toCvMat();
+    }
+    else {
+        throw std::invalid_argument("Image must have 1 or 3 channels for show to work");
+    }
     if (this->absolute_path) {
         cv::imwrite(filename, image);
     } else {
