@@ -11,24 +11,25 @@ Histogram::Histogram() {
     this->log = false;
 }
 
-Histogram::Histogram(int bins) {
+Histogram::Histogram(int bins) : Histogram() {
+    if (bins <= 0) {
+        throw invalid_argument("Number of bins must be greater than 0");
+    }
     this->bins = bins;
-    this->min_range = 0;
-    this->max_range = 1;
-    this->log = false;
 }
 
-Histogram::Histogram(int bins, double min_range, double max_range) {
-    this->bins = bins;
+Histogram::Histogram(int bins, double min_range, double max_range) : Histogram(bins) {
+    if (min_range >= max_range) {
+        throw invalid_argument("Min range must be smaller than max range");
+    }
+    if (min_range < 0 || max_range > 1) {
+        throw invalid_argument("Min range and max range must be between 0 and 1");
+    }
     this->min_range = min_range;
     this->max_range = max_range;
-    this->log = false;
 }
 
-Histogram::Histogram(int bins, double min_range, double max_range, bool log) {
-    this->bins = bins;
-    this->min_range = min_range;
-    this->max_range = max_range;
+Histogram::Histogram(int bins, double min_range, double max_range, bool log) : Histogram(bins, min_range, max_range) {
     this->log = log;
 }
 
@@ -49,14 +50,29 @@ bool Histogram::getLog() const {
 }
 
 void Histogram::setBins(int bins) {
+    if (bins <= 0) {
+        throw invalid_argument("Number of bins must be greater than 0");
+    }
     this->bins = bins;
 }
 
 void Histogram::setMinRange(double min_range) {
+    if (min_range >= this->max_range) {
+        throw invalid_argument("Min range must be smaller than max range");
+    }
+    if (min_range < 0) {
+        throw invalid_argument("Min range must be between 0 and max range");
+    }
     this->min_range = min_range;
 }
 
 void Histogram::setMaxRange(double max_range) {
+    if (max_range <= this->min_range) {
+        throw invalid_argument("Max range must be greater than min range");
+    }
+    if (max_range > 1) {
+        throw invalid_argument("Max range must be between min range and 1");
+    }
     this->max_range = max_range;
 }
 
