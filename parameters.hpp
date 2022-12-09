@@ -17,7 +17,7 @@ int CONTOUR_EXTRACTOR_KERNEL_SIZE = 3;
 
 /* Histogram Parameters */
 int HISTOGRAM_BINS = 500;
-double HISTOGRAM_MIN = 0.2;
+double HISTOGRAM_MIN = 0.;
 double HISTOGRAM_MAX = 1;
 bool LOG_SCALE = false;
 
