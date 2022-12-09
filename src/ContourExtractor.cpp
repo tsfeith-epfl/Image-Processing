@@ -7,55 +7,88 @@
 
 /* Constructors */
 
+/*!
+ * @brief Default Constructor for ContourExtractor
+ * @details Creates a default Denoiser object, and sets the threshold to 0.3.
+ * @return
+ */
 ContourExtractor::ContourExtractor() {
-    threshold = 0.5;
+    threshold = 0.3;
     denoiser = Denoiser();
 }
 
+/*!
+ * @brief Parametric constructor for ContourExtractor
+ * @details Creates a Denoiser object with the given kernel size and sigma value, and sets the threshold to the given value.
+ * @param threshold The threshold value for the gradient magnitude.
+ * @param kernelSize The size of the kernel. Must be odd.
+ * @param sigma The sigma value of the Gaussian Filter. Set to 0 to use a mean filter.
+ * @return
+ */
 ContourExtractor::ContourExtractor(double threshold, int kernelSize, double sigma) {
     this->threshold = threshold;
     denoiser = Denoiser(kernelSize, sigma);
 }
 
 /* Public Methods */
+
+/*!
+ * @brief Getter for the threshold value
+ * @return The threshold value
+ */
 double ContourExtractor::getThreshold() const {
     return threshold;
 }
 
+/*!
+ * @brief Getter for the Denoiser object
+ * @return The Denoiser object
+ */
+Denoiser ContourExtractor::getDenoiser() const {
+    return denoiser;
+}
+
+
+/*!
+ * @brief Setter for the threshold value
+ * @param threshold The new threshold value
+ */
+void ContourExtractor::setThreshold(double threshold) {
+    this->threshold = threshold;
+}
+
+/*!
+ * @brief Setter for the Denoiser object
+ * @param denoiser The new Denoiser object
+ */
+void ContourExtractor::setDenoiser(const Denoiser& denoiser) {
+    this->denoiser = denoiser;
+}
+
+/*!
+ * @brief Extracts the contours from the given image
+ * @details The image is first denoised, then the gradient is calculated, and the gradient magnitude is thresholded.
+ * @param image The image to extract the contours from
+ * @return The extracted contours (binary image)
+ */
 Image ContourExtractor::extractContours(const Image& image, bool show) {
-    /*
-     * * Extracts the contours of an image using the Canny algorithm.
-     */
+    // convert to grayscale
+    Image gray = image;
+    gray = gray.reduceChannels();
 
-    // First, convert image to grayscale
-    Image grayImage = image;
-    grayImage.reduceChannels();
+    // denoise image
+    Image denoised = this->denoiser.denoise(gray);
 
-    // Apply gaussian smoothing to denoise
-    Image denoisedImage = this->denoiser.denoise(image);
+    // compute gradient magnitude
+    Image gradientMagnitude = computeGradientMagnitude(denoised);
 
-    // Compute the gradient of the image
-    // Get sobel kernels
-    Eigen::ArrayXXd sobelX = Eigen::ArrayXXd::Zero(3, 3);
-    Eigen::ArrayXXd sobelY = Eigen::ArrayXXd::Zero(3, 3);
-    sobelX << -1, 0, 1,
-              -2, 0, 2,
-              -1, 0, 1;
+    // apply thresholding
+    Image contours = applyThreshold(gradientMagnitude, this->threshold);
 
-    sobelY << -1, -2, -1,
-               0,  0,  0,
-               1,  2,  1;
+    if (show) {
+        contours.show("Contours");
+    }
 
-    // Apply sobel kernels to image and compute gradient magnitude and direction
-    Eigen::ArrayXXd gradientX = applyConvolution(denoisedImage.getData(0), sobelX);
-    Eigen::ArrayXXd gradientY = applyConvolution(denoisedImage.getData(0), sobelY);
-    Eigen::ArrayXXd gradientMagnitude = (gradientX.pow(2) + gradientY.pow(2)).sqrt();
-    Eigen::ArrayXXd gradientDirection = gradientY.atan2(gradientX);
-
-    // implement non-maximum suppression
-    Eigen::ArrayXXd suppressedImage;
-
-
-    return grayImage;//change this
+    return contours;
 }
 
