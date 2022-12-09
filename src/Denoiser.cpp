@@ -3,8 +3,6 @@
 //
 
 #include "Denoiser.hpp"
-
-#include <utility>
 #include "operations.hpp"
 
 /*!

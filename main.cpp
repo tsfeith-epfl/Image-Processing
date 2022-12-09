@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
         cout << "\t --mode <mode> [OPTIONAL] {'denoise', 'countour_extractor', 'histogram'} (default is 'denoise')" << endl;
         cout << "\t --input <input file> [REQUIRED]" << endl;
         cout << "\t --output <output file> [OPTIONAL] (default is same as input)" << endl;
-        cout << "\nTo edit the parameters used in each mode, edit the 'parameters.json' file in the root of the project." << endl;
+        cout << "\nTo edit the parameters used in each mode, edit the 'parameters.hpp' file in the root of the project." << endl;
         return 0;
     }
 
