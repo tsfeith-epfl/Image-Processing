@@ -3,6 +3,7 @@
 cd libraries
 # download eigen
 git clone https://gitlab.com/libeigen/eigen.git
+cd ..
 
 # install opencv
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
