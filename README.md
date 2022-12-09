@@ -116,3 +116,4 @@ After running the program, the output will be placed in one of two places:
 
 - [ ] Allow for the generation of histograms for each channel, not just the intensity
 - [ ] Allow batch processing of images, instead of just one at a time
+- [ ] Allow more flexibility to the convolutional methods (padding, stride, dilation,...)
