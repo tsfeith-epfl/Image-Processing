@@ -149,7 +149,10 @@ void Histogram::setLog(bool log) {
  */
 vector<vector<double>> Histogram::computeHistogram(Image image) const {
     vector<vector<double>> output;
-    image = image.reduceChannels();
+    if (image.getChannels() != 1) {
+        cout << "CAUTION: Image is not grayscale. Converting to grayscale..." << endl;
+        image = image.reduceChannels();
+    }
     for (int i = 0; i < this->bins; i++) {
         output.push_back({this->min_range + i * (this->max_range - this->min_range) / this->bins, 0});
     }
