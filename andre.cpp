@@ -14,25 +14,13 @@ using namespace std;
 
 int main(){
     // read image
-    Image image("coins.jpg");
+    Image image("pinwheel.png");
 
-    image.show("Original Image");
+    // create contour extractor
+    ContourExtractor contourExtractor(0.3, 5, 2);
 
-    //denoise image
-    Denoiser denoiser(3, 2.0);
-    Image denoisedImage = denoiser.denoise(image);
-    denoisedImage.show("Denoised Image");
-
-    // compute gradients and display
-    Image gradientMagnitude = computeGradientMagnitude(denoisedImage);
-    Image gradientDirection = computeGradientDirection(denoisedImage);
-    gradientMagnitude.show("Gradient Magnitude");
-    gradientDirection.show("Gradient Direction");
-
-    // apply thresholding
-    Image thresholded = applyThreshold(gradientMagnitude, 0.5);
-    thresholded.show("Thresholded");
-
+    // extract contours
+    Image contours = contourExtractor.extractContours(image, true);
 
     return 0;
 }
