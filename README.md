@@ -1,8 +1,12 @@
 # Image-Processing
-Repository for the final project of Programming Concepts in Scientific Computing (MATH-458), by Tomás Feith and André Charneca.
+Repository for the final project of Programming Concepts in Scientific Computing (MATH-458), by Tomás Feith and André 
+Charneca.
 
 ## Description
-#TODO - Add description
+This project aims to implement a set of image processing algorithms, specifically image denoising, contour detection,
+generation of its intensity histogram and computation of its FFT. The algorithms are implemented in C++, and the 
+documentation is generated using Doxygen.
+This project contains an extensive suite of unit tests, which are run using the Google Test framework.
 
 ## Setup
 
@@ -55,16 +59,21 @@ After setup, the project will have the following structure:
     ├── libraries
     │   └── eigen
     ├── src
+    │   ├── ContourExtractor.cpp
+    │   ├── ContourExtractor.hpp
     │   ├── Denoiser.cpp
     │   ├── Denoiser.hpp
+    │   ├── Histogram.cpp
+    │   ├── Histogram.hpp
     │   ├── Image.cpp
     │   ├── Image.hpp
-    │   ├── location.hpp
+    │   ├── location.hpp       # Helper file generated on build to know the absolute location of the project
     │   ├── operations.cpp
     │   └── operations.hpp
     ├── test                   # Folder with all the unit tests
     │   └── ...
     ├── CMakeLists.txt
+    ├── Doxyfile.in
     ├── main.cpp
     ├── parameters.hpp
     ├── README.md
@@ -82,22 +91,28 @@ parameters, and they are described below.
 - Contour Detection
   - #TODO - Add parameters
 - Intensity Histogram
-  - bins: number of bins to use in the histogram. Default: 100
-  - range: range of the histogram. Default: [0, 1]
-  - normalize: whether to normalize the histogram. Default: true
+  - bins: number of bins to use in the histogram. Default: 500
+  - max range: maximum value to use in the histogram. Must be between in (`min_range`, 1.]. Default: 1.0
+  - min range: minimum value to use in the histogram. Must be between in [0., `max_range`). Default: 0.0
   - log: whether to use a logarithmic scale for the histogram. Default: false
 
 ### Running the program
 To run the program, simply run the executable created in the `build` folder. Even though the program reads the parameters
 from the parameters.hpp` file, there are still some parameters that must be passed as arguments. These are:
-- mode: the mode of operation of the program. OPTIONAL (default: denoising). Possible values:
+- mode: the mode of operation of the program. REQUIRED. Possible values:
   - denoise: denoises the image
   - contour: detects the contours of the image
-  - intensity_histogram: computes the intensity histogram of the image
+  - histogram: computes the intensity histogram of the image
 - input: name of the input image (including the extension). REQUIRED
+  - It can be given as an absolute path, or as a relative path to the `images` folder. 
 - output: name of the output image (including the extension). OPTIONAL (default: same as input image)
 
 After running the program, the output will be placed in one of two places:
 - If the filename was provided as an absolute path, the output will be placed in the same folder as the input image;
 - If the filename was provided as the name of the image inside the `images` folder, the output will be placed in the
 `output` folder.
+
+## TODO
+
+- [ ] Allow for the generation of histograms for each channel, not just the intensity
+- [ ] Allow batch processing of images, instead of just one at a time
