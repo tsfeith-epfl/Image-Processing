@@ -5,6 +5,7 @@
 #include "Image.hpp"
 #include "Denoiser.hpp"
 #include "Histogram.hpp"
+#include "ContourExtractor.hpp"
 #include "parameters.hpp"
 
 
@@ -40,7 +41,7 @@ int main(int argc, char **argv) {
     for (int i = 1; i < argc; i += 2) {
         string arg = argv[i];
         if (arg == "--mode") {
-            if (strcmp(argv[i + 1], "denoise") == 0 || strcmp(argv[i + 1], "contour_detector") == 0 || strcmp(argv[i + 1], "histogram") == 0) {
+            if (strcmp(argv[i + 1], "denoise") == 0 || strcmp(argv[i + 1], "contour_extractor") == 0 || strcmp(argv[i + 1], "histogram") == 0) {
                 mode = argv[i + 1];
             }
             else {
@@ -109,6 +110,20 @@ int main(int argc, char **argv) {
 
         Histogram histogram(HISTOGRAM_BINS, HISTOGRAM_MIN, HISTOGRAM_MAX, LOG_SCALE);
         histogram.getHistogram(image, output_name);
+    }
+
+    if (mode == "contour_extractor") {
+        // show information about what is being done
+        cout << "Extracting contours form image: " << input_name << endl;
+        cout << "Parameters used are:" << endl;
+        cout << "\tDenoising kernel size: " << CONTOUR_EXTRACTOR_KERNEL_SIZE << endl;
+        cout << "\tDenoising sigma: " << CONTOUR_EXTRACTOR_SIGMA << endl;
+        cout << "\tThreshold: " << CONTOUR_EXTRACTOR_THRESHOLD << endl;
+        cout << "\tOutput file: " << output_name << endl;
+
+        ContourExtractor contour_extractor(CONTOUR_EXTRACTOR_THRESHOLD, CONTOUR_EXTRACTOR_KERNEL_SIZE, CONTOUR_EXTRACTOR_SIGMA);
+        Image contour_image = contour_extractor.extractContours(image, true);
+        contour_image.save(output_name);
     }
 
     return 0;
