@@ -12,8 +12,8 @@
 Eigen::ArrayXXd applyConvolution(const Eigen::ArrayXXd input, const Eigen::ArrayXXd kernel);
 Image applyConvolution(const Image& input, const Eigen::ArrayXXd& kernel);
 
-Image computeGradientX(const Image& input);
-Image computeGradientY(const Image& input);
+Eigen::ArrayXXd computeGradientX(const Image& input);
+Eigen::ArrayXXd computeGradientY(const Image& input);
 Image computeGradientMagnitude(const Image& input);
 Image computeGradientDirection(const Image& input);
 

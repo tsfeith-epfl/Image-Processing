@@ -13,25 +13,28 @@
 using namespace std;
 
 int main(){
-    // read image and convert to grayscale
+    // read image
     Image image("teapot.png");
-    // average channels
-    vector<Eigen::ArrayXXd> avg_img = image.getData();
 
-    Eigen::ArrayXXd avg = (avg_img[0] + avg_img[1] + avg_img[2]) / 3;
+    image.show("Original Image");
 
-    Image avg_image(1, avg);
+    // compute gradients and display
+    Eigen::ArrayXXd gradientX = computeGradientX(image);
+    Eigen::ArrayXXd gradientY = computeGradientY(image);
+    Image gradientMagnitude = computeGradientMagnitude(image);
+    Image gradientDirection = computeGradientDirection(image);
 
-    // display 1 channel image
-    cv::Mat avg_mat = avg_image.toCvMat();
-    // convert to color
-    cv::cvtColor(avg_mat, avg_mat, cv::COLOR_GRAY2BGR);
-    cv::imshow("Average Image", avg_mat);
-    cv::waitKey(0);
+    // normalize gradients and display
+    gradientX = (gradientX - gradientX.minCoeff()) / (gradientX.maxCoeff() - gradientX.minCoeff());
+    gradientY = (gradientY - gradientY.minCoeff()) / (gradientY.maxCoeff() - gradientY.minCoeff());
+    Image gradientXImage = Image(1, gradientX);
+    Image gradientYImage = Image(1, gradientY);
+    gradientXImage.show("Gradient X");
+    gradientYImage.show("Gradient Y");
+    gradientMagnitude.show("Gradient Magnitude");
+    gradientDirection.show("Gradient Direction");
 
 
-    //Q: the image is not displayed correctly because it only has 1 channel. How to fix this?
-    //A: use cv::cvtColor to convert the image to a 3-channel image
 
 
 
