@@ -2,6 +2,14 @@
 // Created by André Charneca on 06.12.22.
 //
 
+//NOTE: tests missing for the following methods:
+// - ContourExtractor::extractContours()
+// - ContourExtractor::getThreshold()
+// - ContourExtractor::getDenoiser()
+// - ContourExtractor::setThreshold()
+// - ContourExtractor::setDenoiser()
+
+
 #include "ContourExtractor.hpp"
 #include <gtest/gtest.h>
 
@@ -27,7 +35,7 @@ TEST_F(contourExtractorTests, defaultConstructorThrowsNoException) {
 
 TEST_F(contourExtractorTests, defaultConstructorGivesRightThreshold) {
     ContourExtractor contourExtractor;
-    ASSERT_EQ(contourExtractor.getThreshold(), 0.5);
+    ASSERT_EQ(contourExtractor.getThreshold(), 0.3);
 }
 
 TEST_F(contourExtractorTests, constructorWithParamsThrowsNoException) {
