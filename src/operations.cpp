@@ -14,9 +14,9 @@
  * @details This function computes the convolution of an image with a kernel. The kernel is assumed to be centered, and
  * it must be odd in size and squared. The image is padded with zeros so that the output image has the same size as the
  * input image.
- * @param input Input image in the form of a matrix
+ * @param input Input image in the form of an array
  * @param kernel Kernel to be used in the convolution
- * @return Output image in the form of a matrix
+ * @return Output image in the form of an array
  */
 Eigen::ArrayXXd applyConvolution(Eigen::ArrayXXd input, Eigen::ArrayXXd kernel) {
     if (kernel.rows() % 2 == 0 || kernel.cols() % 2 == 0) {
@@ -51,6 +51,7 @@ Eigen::ArrayXXd applyConvolution(Eigen::ArrayXXd input, Eigen::ArrayXXd kernel) 
             }
         }
     }
+
     return output;
 }
 
@@ -58,19 +59,24 @@ Eigen::ArrayXXd applyConvolution(Eigen::ArrayXXd input, Eigen::ArrayXXd kernel) 
  * @brief Function to compute the convolution of an image with a kernel
  * @details This function computes the convolution of an image with a kernel. The kernel is assumed to be centered, and
  * it must be odd in size and squared. The image is padded with zeros so that the output image has the same size as the
- * input image.
+ * input image. Note: In order to return a valid image, the Image is normalized to [0,1].
  * @param input Input image in the form of an Image object (see Image.hpp)
  * @param kernel Kernel to be used in the convolution
  * @return Output image in the form of an Image object
  */
 Image applyConvolution(const Image& input, const Eigen::ArrayXXd& kernel) {
-    // There is no need to add all the tests again, since the Image is tested on creation
-    // and the 'applyConvolution' function is tested above.
+
     vector<Eigen::ArrayXXd> output = vector<Eigen::ArrayXXd>();
     // apply the convolution independently to each channel
     for (int i = 0; i < input.getChannels(); i++) {
         output.push_back(applyConvolution(input.getData(i), kernel));
     }
+
+    //normalize each channel to 0,1
+    for (int i = 0; i < input.getChannels(); i++) {
+        output[i] = (output[i] - output[i].minCoeff()) / (output[i].maxCoeff() - output[i].minCoeff());
+    }
+
     return Image(output);
 }
 
@@ -151,11 +157,14 @@ Image computeGradientMagnitude(const Image& input){
     return Image(output);
 }
 
+/*!
+ * @brief Function to compute the gradient direction of an image
+ * @details This function computes the gradient magnitude of an image. The gradient along each direction is computed
+ * using the Sobel operator, and the magnitude is computed as the 2-norm of the gradient vector.
+ * @param input Input image as an Image object
+ * @return Output image as an Image object, with values in the range [0, 1]
+ */
 Image computeGradientDirection(const Image& input){
-    /**
-     * Computes the gradient direction of a grayscale Image, in the range [0,1].
-     */
-
     // compute gradient in x and y direction
     Eigen::ArrayXXd gradient_x = computeGradientX(input);
     Eigen::ArrayXXd gradient_y = computeGradientY(input);
@@ -167,6 +176,32 @@ Image computeGradientDirection(const Image& input){
     for (int i = 0; i < input.getHeight(); i++) {
         for (int j = 0; j < input.getWidth(); j++) {
             output(i, j) = atan2(gradient_y(i, j), gradient_x(i, j)) / (2 * M_PI) + 0.5;
+        }
+    }
+
+    return Image(output);
+}
+
+/*!
+ * @brief Function to threshold an image
+ * @details This function thresholds an image, setting all values above the threshold to 1 and all values below to 0.
+ * @param input Input image as an Image object
+ * @param threshold double threshold value
+ * @return Output image as an Image object
+ */
+Image applyThreshold(const Image& input, double threshold) {
+    Image img_copy = input;
+    if (img_copy.getChannels() != 1) {
+        img_copy = img_copy.reduceChannels();
+    }
+    Eigen::ArrayXXd img_data = img_copy.getData(0);
+    Eigen::ArrayXXd output = Eigen::ArrayXXd::Zero(input.getHeight(), input.getWidth());
+
+    for (int i = 0; i < input.getHeight(); i++) {
+        for (int j = 0; j < input.getWidth(); j++) {
+            if (img_data(i, j) > threshold) {
+                output(i, j) = 1;
+            }
         }
     }
 

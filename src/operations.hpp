@@ -16,6 +16,7 @@ Eigen::ArrayXXd computeGradientX(const Image& input);
 Eigen::ArrayXXd computeGradientY(const Image& input);
 Image computeGradientMagnitude(const Image& input);
 Image computeGradientDirection(const Image& input);
+Image applyThreshold(const Image& input, double threshold);
 
 
 
