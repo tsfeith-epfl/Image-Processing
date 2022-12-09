@@ -151,7 +151,7 @@ vector<vector<double>> Histogram::computeHistogram(Image image) const {
     vector<vector<double>> output;
     image = image.reduceChannels();
     for (int i = 0; i < this->bins; i++) {
-        output.push_back({this->min_range + i * (this->max_range - this->min_range), 0});
+        output.push_back({this->min_range + i * (this->max_range - this->min_range) / this->bins, 0});
     }
 
     for (int i = 0; i < image.getHeight(); i++) {
@@ -176,7 +176,10 @@ vector<vector<double>> Histogram::computeHistogram(Image image) const {
  * @param image Image to compute the histogram
  * @param output Path to save the histogram
  */
-void Histogram::getHistogram(const Image &image, const string& output) const {
+void Histogram::getHistogram(const Image &image, const string& output, bool show) const {
+    if (!show and output.empty()) {
+        throw invalid_argument("This method needs to either show the histogram or save it to a file");
+    }
     vector<vector<double>> hist = this->computeHistogram(image);
     // plot histogram using gnuplot
     FILE *gnuplotPipe = popen("gnuplot -persistent", "w");
@@ -211,7 +214,7 @@ void Histogram::getHistogram(const Image &image, const string& output) const {
     }
     fprintf(gnuplotPipe, "e\n");
 
-    if (!output.empty()) {
+    if (!output.empty() and show) {
         fprintf(gnuplotPipe, "set terminal qt size 800,600\n");
         fprintf(gnuplotPipe, "set output\n");
         fprintf(gnuplotPipe, "replot\n");
