@@ -16,10 +16,13 @@ using namespace std;
 /**
  * @brief The ContourExtractor class
  * @details This class implements a ContourExtractor for Image Processing.
- * It uses the thresholding of the gradient magnitude to extract contours.
- * The kernel size, sigma value and gradient threshold can be set.
+ * It first applies a denoising filter to the image to reduce high frequencies.
+ * Then, it computes a normalized gradient magnitude (using the Sobel operator)
+ * in the range [0, 1]. Finally, it applies a thresholding to the gradient magnitude
+ * to extract the contours.
+ * The kernel size and sigma value for the denoising filter can be specified.
+ * The threshold value can also be specified.
  */
-
 class ContourExtractor {
 private:
     double threshold;

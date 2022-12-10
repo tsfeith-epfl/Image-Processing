@@ -170,7 +170,7 @@ TEST_F(denoiserTests, setKernelThrowsExceptionOnNonPositiveSize) {
 TEST_F(denoiserTests, setKernelThrowsExceptionOnNonNormalizedKernel) {
     Denoiser denoiser(3, 1);
     Eigen::ArrayXXd non_normalized_kernel = Eigen::ArrayXXd::Zero(3, 3);
-    non_normalized_kernel(0, 0) = 1;
+    non_normalized_kernel(0, 0) = 5;
     ASSERT_THROW(denoiser.setKernel(non_normalized_kernel), invalid_argument);
 }
 

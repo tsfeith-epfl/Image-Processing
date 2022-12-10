@@ -175,7 +175,7 @@ Image computeGradientMagnitude(const Image& input){
     // compute gradient direction
     for (int i = 0; i < input.getHeight(); i++) {
         for (int j = 0; j < input.getWidth(); j++) {
-            output(i, j) = atan2(gradient_y(i, j), gradient_x(i, j));
+            output(i, j) = atan2(gradient_y(i, j), gradient_x(i, j)) / (2 * M_PI) + 0.5;
         }
     }
 

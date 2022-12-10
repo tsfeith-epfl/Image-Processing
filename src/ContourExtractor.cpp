@@ -27,8 +27,8 @@ ContourExtractor::ContourExtractor() {
  * @return
  */
 ContourExtractor::ContourExtractor(double threshold, int kernelSize, double sigma) {
-    if (threshold < 0) {
-        throw std::invalid_argument("Threshold must be positive");
+    if (threshold < 0 || threshold > 1) {
+        throw std::invalid_argument("Threshold must be between 0 and 1");
     }
     this->threshold = threshold;
     this->denoiser = Denoiser(kernelSize, sigma);
@@ -41,6 +41,9 @@ ContourExtractor::ContourExtractor(double threshold, int kernelSize, double sigm
  * @param kernel The kernel to be used for the denoising.
  */
 ContourExtractor::ContourExtractor(double threshold, const Eigen::ArrayXXd &kernel) {
+    if (threshold < 0 || threshold > 1) {
+        throw std::invalid_argument("Threshold must be between 0 and 1");
+    }
     this->threshold = threshold;
     this->denoiser = Denoiser(kernel);
 }
@@ -70,8 +73,8 @@ Denoiser ContourExtractor::getDenoiser() const {
  * @param threshold The new threshold value
  */
 void ContourExtractor::setThreshold(double threshold) {
-    if (threshold < 0) {
-        throw std::invalid_argument("Threshold must be positive");
+    if (threshold < 0 || threshold > 1) {
+        throw std::invalid_argument("Threshold must be between 0 and 1");
     }
     this->threshold = threshold;
 }
