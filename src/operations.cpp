@@ -137,7 +137,7 @@ Eigen::ArrayXXd computeGradientY(const Image& input){
  * @details This function computes the gradient magnitude of an image. The gradient along each direction is computed
  * using the Sobel operator, and the magnitude is computed as the 2-norm of the gradient vector.
  * @param input Input image as an Image object
- * @return Output image as an Image object
+ * @return Output image as an Eigen::ArrayXXd
  */
 Image computeGradientMagnitude(const Image& input){
     // compute gradient in x and y direction
@@ -160,11 +160,11 @@ Image computeGradientMagnitude(const Image& input){
 /*!
  * @brief Function to compute the gradient direction of an image
  * @details This function computes the gradient magnitude of an image. The gradient along each direction is computed
- * using the Sobel operator, and the magnitude is computed as the 2-norm of the gradient vector.
+ * using the Sobel operator, and the direction is computed as the arctangent of the y gradient divided by the x gradient.
  * @param input Input image as an Image object
- * @return Output image as an Image object, with values in the range [0, 1]
+ * @return Output image as an Eigen::ArrayXXd with values
  */
-Image computeGradientDirection(const Image& input){
+[[maybe_unused]] Image computeGradientDirection(const Image& input){
     // compute gradient in x and y direction
     Eigen::ArrayXXd gradient_x = computeGradientX(input);
     Eigen::ArrayXXd gradient_y = computeGradientY(input);
@@ -175,7 +175,7 @@ Image computeGradientDirection(const Image& input){
     // compute gradient direction
     for (int i = 0; i < input.getHeight(); i++) {
         for (int j = 0; j < input.getWidth(); j++) {
-            output(i, j) = atan2(gradient_y(i, j), gradient_x(i, j)) / (2 * M_PI) + 0.5;
+            output(i, j) = atan2(gradient_y(i, j), gradient_x(i, j));
         }
     }
 
@@ -204,7 +204,6 @@ Image applyThreshold(const Image& input, double threshold) {
             }
         }
     }
-
     return Image(output);
 }
 

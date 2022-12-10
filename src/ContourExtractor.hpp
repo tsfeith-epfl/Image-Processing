@@ -34,8 +34,10 @@ public:
 
     [[nodiscard]] double getThreshold() const;
     [[nodiscard]] Denoiser getDenoiser() const;
+
     void setThreshold(double threshold);
     void setDenoiser(const Denoiser& denoiser);
+    void setDenoiser(int kernel_size, double sigma);
 };
 
 #endif //IMAGEPROCESSING_CONTOUREXTRACTOR_HPP

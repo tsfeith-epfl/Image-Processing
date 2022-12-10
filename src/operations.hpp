@@ -9,13 +9,14 @@
 #include <vector>
 #include "Image.hpp"
 
-Eigen::ArrayXXd applyConvolution(const Eigen::ArrayXXd input, const Eigen::ArrayXXd kernel);
+Eigen::ArrayXXd applyConvolution(Eigen::ArrayXXd input, Eigen::ArrayXXd kernel);
 Image applyConvolution(const Image& input, const Eigen::ArrayXXd& kernel);
 
 Eigen::ArrayXXd computeGradientX(const Image& input);
 Eigen::ArrayXXd computeGradientY(const Image& input);
 Image computeGradientMagnitude(const Image& input);
-Image computeGradientDirection(const Image& input);
+
+[[maybe_unused]] Image computeGradientDirection(const Image& input);
 Image applyThreshold(const Image& input, double threshold);
 
 

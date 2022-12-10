@@ -9,26 +9,42 @@
 
 /*!
  * @brief Default Constructor for ContourExtractor
- * @details Creates a default Denoiser object, and sets the threshold to 0.3.
+ * @details Creates a default ContourExtractor object with default parameters.
  * @return
  */
 ContourExtractor::ContourExtractor() {
-    threshold = 0.3;
-    denoiser = Denoiser();
+    this->threshold = 0.3;
+    this->denoiser = Denoiser();
 }
 
 /*!
  * @brief Parametric constructor for ContourExtractor
- * @details Creates a Denoiser object with the given kernel size and sigma value, and sets the threshold to the given value.
+ * @details Creates the internal Denoiser object with the given kernel size and sigma value, and sets the threshold to
+ * the given value.
  * @param threshold The threshold value for the gradient magnitude.
  * @param kernelSize The size of the kernel. Must be odd.
  * @param sigma The sigma value of the Gaussian Filter. Set to 0 to use a mean filter.
  * @return
  */
 ContourExtractor::ContourExtractor(double threshold, int kernelSize, double sigma) {
+    if (threshold < 0) {
+        throw std::invalid_argument("Threshold must be positive");
+    }
     this->threshold = threshold;
-    denoiser = Denoiser(kernelSize, sigma);
+    this->denoiser = Denoiser(kernelSize, sigma);
 }
+
+/*!
+ * @brief Parametric constructor for ContourExtractor
+ * @details Creates the internal Denoiser object from the given kernel, and sets the threshold to the given value.
+ * @param threshold The threshold value for the gradient magnitude.
+ * @param kernel The kernel to be used for the denoising.
+ */
+ContourExtractor::ContourExtractor(double threshold, const Eigen::ArrayXXd &kernel) {
+    this->threshold = threshold;
+    this->denoiser = Denoiser(kernel);
+}
+
 
 /* Public Methods */
 
@@ -37,7 +53,7 @@ ContourExtractor::ContourExtractor(double threshold, int kernelSize, double sigm
  * @return The threshold value
  */
 double ContourExtractor::getThreshold() const {
-    return threshold;
+    return this->threshold;
 }
 
 /*!
@@ -45,7 +61,7 @@ double ContourExtractor::getThreshold() const {
  * @return The Denoiser object
  */
 Denoiser ContourExtractor::getDenoiser() const {
-    return denoiser;
+    return this->denoiser;
 }
 
 
@@ -54,6 +70,9 @@ Denoiser ContourExtractor::getDenoiser() const {
  * @param threshold The new threshold value
  */
 void ContourExtractor::setThreshold(double threshold) {
+    if (threshold < 0) {
+        throw std::invalid_argument("Threshold must be positive");
+    }
     this->threshold = threshold;
 }
 
@@ -61,8 +80,13 @@ void ContourExtractor::setThreshold(double threshold) {
  * @brief Setter for the Denoiser object
  * @param denoiser The new Denoiser object
  */
-void ContourExtractor::setDenoiser(const Denoiser& denoiser) {
+void ContourExtractor::setDenoiser(const Denoiser &denoiser) {
     this->denoiser = denoiser;
+}
+
+void ContourExtractor::setDenoiser(int kernel_size, double sigma) {
+    Denoiser new_denoiser = Denoiser(kernel_size, sigma);
+    this->denoiser = new_denoiser;
 }
 
 /*!
@@ -71,7 +95,7 @@ void ContourExtractor::setDenoiser(const Denoiser& denoiser) {
  * @param image The image to extract the contours from
  * @return The extracted contours (binary image)
  */
-Image ContourExtractor::extractContours(const Image& image, bool show) {
+Image ContourExtractor::extractContours(const Image &image, bool show) {
     // convert to grayscale
     Image gray = image;
     gray = gray.reduceChannels();
@@ -91,4 +115,3 @@ Image ContourExtractor::extractContours(const Image& image, bool show) {
 
     return contours;
 }
-

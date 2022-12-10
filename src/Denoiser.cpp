@@ -106,6 +106,10 @@ Eigen::ArrayXXd Denoiser::getKernel() const {
     return this->kernel;
 }
 
+/*!
+ * @brief Simple setter for the kernel.
+ * @param kernel
+ */
 void Denoiser::setKernel(const Eigen::ArrayXXd &kernel) {
     if (kernel.rows() == 0 || kernel.cols() == 0) {
         throw invalid_argument("Kernel cannot be empty");
