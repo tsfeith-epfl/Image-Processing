@@ -105,3 +105,25 @@ Image Denoiser::denoise(const Image& image, bool show) {
 Eigen::ArrayXXd Denoiser::getKernel() const {
     return this->kernel;
 }
+
+void Denoiser::setKernel(const Eigen::ArrayXXd &kernel) {
+    if (kernel.rows() == 0 || kernel.cols() == 0) {
+        throw invalid_argument("Kernel cannot be empty");
+    }
+    if (kernel.rows() % 2 == 0 || kernel.cols() % 2 == 0) {
+        throw invalid_argument("Kernel size must be odd");
+    }
+    if (kernel.rows() != kernel.cols()) {
+        throw invalid_argument("Kernel must be square");
+    }
+    double sum = 0;
+    for (int i = 0; i < kernel.rows(); i++) {
+        for (int j = 0; j < kernel.cols(); j++) {
+            sum += kernel(i, j);
+        }
+    }
+    if (fabs(sum - 1) > 1e-6) {
+        throw invalid_argument("Kernel must be normalized");
+    }
+    this->kernel = kernel;
+}

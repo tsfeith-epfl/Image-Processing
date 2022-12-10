@@ -148,3 +148,40 @@ TEST_F(denoiserTests, getKernelWorks) {
         }
     }
 }
+
+TEST_F(denoiserTests, setKernelThrowsExceptionOnNonSquareKernel) {
+    Denoiser denoiser(3, 1);
+    Eigen::ArrayXXd non_square_kernel = Eigen::ArrayXXd::Zero(3, 4);
+    ASSERT_THROW(denoiser.setKernel(non_square_kernel), invalid_argument);
+}
+
+TEST_F(denoiserTests, setKernelThrowsExceptionOnEvenSize) {
+    Denoiser denoiser(3, 1);
+    Eigen::ArrayXXd even_kernel = Eigen::ArrayXXd::Zero(4, 4);
+    ASSERT_THROW(denoiser.setKernel(even_kernel), invalid_argument);
+}
+
+TEST_F(denoiserTests, setKernelThrowsExceptionOnNonPositiveSize) {
+    Denoiser denoiser(3, 1);
+    Eigen::ArrayXXd non_positive_kernel = Eigen::ArrayXXd::Zero(0, 0);
+    ASSERT_THROW(denoiser.setKernel(non_positive_kernel), invalid_argument);
+}
+
+TEST_F(denoiserTests, setKernelThrowsExceptionOnNonNormalizedKernel) {
+    Denoiser denoiser(3, 1);
+    Eigen::ArrayXXd non_normalized_kernel = Eigen::ArrayXXd::Zero(3, 3);
+    non_normalized_kernel(0, 0) = 1;
+    ASSERT_THROW(denoiser.setKernel(non_normalized_kernel), invalid_argument);
+}
+
+TEST_F(denoiserTests, setKernelWorks) {
+    Denoiser denoiser(3, 1);
+    Eigen::ArrayXXd kernel = Eigen::ArrayXXd::Zero(3, 3);
+    kernel(0, 0) = 1;
+    denoiser.setKernel(kernel);
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+            ASSERT_EQ(denoiser.getKernel()(i, j), kernel(i, j));
+        }
+    }
+}

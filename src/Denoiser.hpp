@@ -31,6 +31,8 @@ public:
 
     Image denoise(const Image& image, bool show=false);
 
+    void setKernel(const Eigen::ArrayXXd& kernel);
+
     [[nodiscard]] Eigen::ArrayXXd getKernel() const;
 };
 
