@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
         program_name = program_name.substr(last_slash + 1);
         cout << "\t ./" << program_name << " [ARGUMENTS]" << endl;
         cout << "Arguments:" << endl;
-        cout << "\t --mode <mode> [OPTIONAL] {'denoise', 'countour_extractor', 'histogram'} (default is 'denoise')" << endl;
+        cout << "\t --mode <mode> [OPTIONAL] {'denoise', 'countour', 'histogram'} (default is 'denoise')" << endl;
         cout << "\t --input <input file> [REQUIRED]" << endl;
         cout << "\t --output <output file> [OPTIONAL] (default is same as input)" << endl;
         cout << "\nTo edit the parameters used in each mode, edit the 'parameters.hpp' file in the root of the project." << endl;
@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
     for (int i = 1; i < argc; i += 2) {
         string arg = argv[i];
         if (arg == "--mode") {
-            if (strcmp(argv[i + 1], "denoise") == 0 || strcmp(argv[i + 1], "contour_extractor") == 0 || strcmp(argv[i + 1], "histogram") == 0) {
+            if (strcmp(argv[i + 1], "denoise") == 0 || strcmp(argv[i + 1], "contour") == 0 || strcmp(argv[i + 1], "histogram") == 0) {
                 mode = argv[i + 1];
             }
             else {
@@ -112,7 +112,7 @@ int main(int argc, char **argv) {
         histogram.getHistogram(image, output_name);
     }
 
-    if (mode == "contour_extractor") {
+    if (mode == "contour") {
         // show information about what is being done
         cout << "Extracting contours form image: " << input_name << endl;
         cout << "Parameters used are:" << endl;
