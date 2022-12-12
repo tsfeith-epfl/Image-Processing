@@ -14,11 +14,11 @@ include_directories(libraries/eigen)
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
-add_executable(main main.cpp src/operations.cpp src/Image.cpp src/Denoiser.cpp parameters.hpp src/ContourExtractor.cpp src/Histogram.cpp)
+add_executable(main main.cpp src/operations.cpp src/Image.cpp src/Denoiser.cpp parameters.hpp src/ContourExtractor.cpp src/Histogram.cpp src/FourierImage.cpp src/FourierImage.hpp)
 target_link_libraries(main ${OpenCV_LIBS})
 
 # REMOVE BEFORE SUBMISSION
-add_executable(andre andre.cpp src/operations.cpp src/Image.cpp src/Denoiser.cpp parameters.hpp src/ContourExtractor.cpp src/Histogram.cpp)
+add_executable(andre andre.cpp src/operations.cpp src/Image.cpp src/Denoiser.cpp parameters.hpp src/ContourExtractor.cpp src/Histogram.cpp src/FourierImage.cpp src/FourierImage.hpp)
 target_link_libraries(andre ${OpenCV_LIBS})
 
 # build documentation using doxygen
@@ -30,7 +30,7 @@ doxygen_add_docs(Doxyfile.in
 
 # build test suite
 add_subdirectory(googletest)
-add_executable(test_suite test/histogramTests.cpp test/gradientTests.cpp test/convolutionsTests.cpp test/imageTests.cpp test/denoiserTests.cpp src/operations.hpp src/Image.hpp src/Denoiser.cpp test/contourExtractorTests.cpp src/ContourExtractor.cpp test/gradientTests.cpp src/Histogram.cpp)
+add_executable(test_suite test/histogramTests.cpp test/gradientTests.cpp test/convolutionsTests.cpp test/imageTests.cpp test/denoiserTests.cpp src/operations.hpp src/Image.hpp src/Denoiser.cpp test/contourExtractorTests.cpp src/ContourExtractor.cpp test/gradientTests.cpp src/Histogram.cpp src/FourierImage.cpp src/FourierImage.hpp test/fourierImageTests.cpp)
 target_link_libraries(test_suite gtest_main gtest ${OpenCV_LIBS})
 
 add_custom_target(test ./test_suite DEPENDS test_suite)
