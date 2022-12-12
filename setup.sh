@@ -1,4 +1,3 @@
-
 # go to libraries and download the necessary ones
 cd libraries || exit
 # download eigen
