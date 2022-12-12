@@ -50,6 +50,8 @@ After setup, the project will have the following structure:
     .
     ├── build                  # Folder where the executable is created (not necessarily named build)
     │   └── ...
+    ├── documentation          # Folder where Doxygen documentation is created
+    │   └── ...
     ├── googletest             # Folder with the Google Test library
     │   └── ...
     ├── images                 # Folder where the images *must* be placed
@@ -89,7 +91,9 @@ parameters, and they are described below.
   - sigma: standard deviation of the Gaussian kernel to apply to the image. Set to 0 to use mean filtering. Default: 1.0
   - kernel_size: size of the kernel to apply to the image. Default: 3
 - Contour Detection
-  - #TODO - Add parameters
+  - threshold: threshold to use for the contour detection. Default: 0.3
+  - sigma: standard deviation of the Gaussian kernel to apply to the image. Set to 0 to use mean filtering. Default: 2.0
+  - kernel_size: size of the kernel to apply to the image. Default: 5
 - Intensity Histogram
   - bins: number of bins to use in the histogram. Default: 500
   - max range: maximum value to use in the histogram. Must be between in (`min_range`, 1.]. Default: 1.0
@@ -111,6 +115,16 @@ After running the program, the output will be placed in one of two places:
 - If the filename was provided as an absolute path, the output will be placed in the same folder as the input image;
 - If the filename was provided as the name of the image inside the `images` folder, the output will be placed in the
 `output` folder.
+
+## Documentation
+
+There is extensive documentation for the project, which can be generated using Doxygen. To generate the documentation,
+run the following commands in the root directory of the project:
+
+    doxygen Doxyfile.in
+
+This will write the documentation to the `documentation` folder. To view it, go into `documentation/html` and open the
+`index.html` file in your browser.
 
 ## TODO
 
