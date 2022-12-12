@@ -18,7 +18,7 @@ add_executable(main main.cpp src/operations.cpp src/Image.cpp src/Denoiser.cpp p
 target_link_libraries(main ${OpenCV_LIBS})
 
 # REMOVE BEFORE SUBMISSION
-add_executable(andre andre.cpp src/operations.cpp src/Image.cpp src/Denoiser.cpp parameters.hpp src/ContourExtractor.cpp)
+add_executable(andre andre.cpp src/operations.cpp src/Image.cpp src/Denoiser.cpp parameters.hpp src/ContourExtractor.cpp src/Histogram.cpp)
 target_link_libraries(andre ${OpenCV_LIBS})
 
 # build documentation using doxygen
