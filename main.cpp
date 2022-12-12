@@ -8,12 +8,11 @@
 #include "ContourExtractor.hpp"
 #include "parameters.hpp"
 
-
 using namespace std;
+
 int main(int argc, char **argv) {
 
-    string mode = "denoise";
-
+    string mode;
     string input_name;
     string output_name;
 
@@ -25,10 +24,11 @@ int main(int argc, char **argv) {
         program_name = program_name.substr(last_slash + 1);
         cout << "\t ./" << program_name << " [ARGUMENTS]" << endl;
         cout << "Arguments:" << endl;
-        cout << "\t --mode <mode> [OPTIONAL] {'denoise', 'countour', 'histogram'} (default is 'denoise')" << endl;
+        cout << "\t --mode <mode> [REQUIRED] {'denoise', 'countour', 'histogram'}" << endl;
         cout << "\t --input <input file> [REQUIRED]" << endl;
         cout << "\t --output <output file> [OPTIONAL] (default is same as input)" << endl;
-        cout << "\nTo edit the parameters used in each mode, edit the 'parameters.hpp' file in the root of the project." << endl;
+        cout << "\nTo edit the parameters used in each mode, edit the 'parameters.hpp' file in the root of the project."
+             << endl;
         return 0;
     }
 
@@ -37,20 +37,22 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    bool valid = false;
+    bool input_given = false;
+    bool mode_given = false;
     for (int i = 1; i < argc; i += 2) {
         string arg = argv[i];
         if (arg == "--mode") {
-            if (strcmp(argv[i + 1], "denoise") == 0 || strcmp(argv[i + 1], "contour") == 0 || strcmp(argv[i + 1], "histogram") == 0) {
+            if (strcmp(argv[i + 1], "denoise") == 0 || strcmp(argv[i + 1], "contour") == 0 ||
+                strcmp(argv[i + 1], "histogram") == 0) {
                 mode = argv[i + 1];
-            }
-            else {
+                mode_given = true;
+            } else {
                 cout << "Error: Invalid mode. Run ./main for to see the help screen" << endl;
                 return 1;
             }
         } else if (arg == "--input") {
             input_name = argv[i + 1];
-            valid = true;
+            input_given = true;
         } else if (arg == "--output") {
             output_name = argv[i + 1];
         } else {
@@ -59,9 +61,12 @@ int main(int argc, char **argv) {
         }
     }
 
-    if (!valid) {
+    if (!input_given) {
         cout << "Error: No input file specified. Run ./main for to see the help screen" << endl;
         return 1;
+    }
+    if (!mode_given) {
+        cout << "Warning: No mode specified. Run ./main for to see the help screen" << endl;
     }
 
     Image image(input_name);
@@ -76,7 +81,7 @@ int main(int argc, char **argv) {
         size_t dot_pos = output_name.rfind('.');
 
         // Insert the '_[mode]' string before the last '.' character
-        output_name.insert(dot_pos, "_"+mode);
+        output_name.insert(dot_pos, "_" + mode);
     } else {
         if (!image.usedAbsolutePath()) {
             string image_path = image.getPath();
@@ -121,7 +126,8 @@ int main(int argc, char **argv) {
         cout << "\tThreshold: " << CONTOUR_EXTRACTOR_THRESHOLD << endl;
         cout << "\tOutput file: " << output_name << endl;
 
-        ContourExtractor contour_extractor(CONTOUR_EXTRACTOR_THRESHOLD, CONTOUR_EXTRACTOR_KERNEL_SIZE, CONTOUR_EXTRACTOR_SIGMA);
+        ContourExtractor contour_extractor(CONTOUR_EXTRACTOR_THRESHOLD, CONTOUR_EXTRACTOR_KERNEL_SIZE,
+                                           CONTOUR_EXTRACTOR_SIGMA);
         Image contour_image = contour_extractor.extractContours(image, true);
         contour_image.save(output_name);
     }
