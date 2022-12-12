@@ -194,8 +194,6 @@ void Histogram::getHistogram(const Image &image, const string& output, bool show
     else {
         fprintf(gnuplotPipe, "set terminal qt size 800,600\n");
     }
-    fprintf(gnuplotPipe, "set terminal png size 800,600\n");
-    fprintf(gnuplotPipe, "set output '%s'\n", output.c_str());
     fprintf(gnuplotPipe, "set style fill solid 1.0 border -1\n");
     fprintf(gnuplotPipe, "set style data histograms\n");
     fprintf(gnuplotPipe, "set xrange [%d:%d]\n", 0, this->bins);
