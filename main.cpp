@@ -114,7 +114,7 @@ int main(int argc, char **argv) {
         cout << "\tOutput file: " << output_name << endl;
 
         Histogram histogram(HISTOGRAM_BINS, HISTOGRAM_MIN, HISTOGRAM_MAX, LOG_SCALE);
-        histogram.getHistogram(image, output_name);
+        histogram.getHistogram(image, true, output_name);
     }
 
     if (mode == "contour") {
