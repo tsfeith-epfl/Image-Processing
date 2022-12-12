@@ -5,13 +5,6 @@ cd libraries || exit
 git clone https://gitlab.com/libeigen/eigen.git
 cd .. || exit
 
-# install opencv
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    sudo apt-get install -y libopencv-dev
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-    brew install opencv
-fi
-
 # install and build googletest (for unit tests)
 git clone https://github.com/google/googletest.git
 cd googletest || exit
@@ -20,30 +13,19 @@ cd build || exit
 cmake ..
 make
 
-# install graphviz for Doxygen
+# install all required libraries
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    sudo apt-get install -y graphviz
+  sudo apt-get install -y libopencv-dev graphviz doxygen cmake gnuplot
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    brew install graphviz
-fi
-
-# install Doxygen
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    sudo apt-get install -y doxygen
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-    brew install doxygen
-fi
-
-# install CMake
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    sudo apt-get install -y cmake
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-    brew install cmake
-fi
-
-# install gnuplot
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    sudo apt-get install -y gnuplot
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-    brew install gnuplot
+  brew install opencv graphviz doxygen cmake gnuplot
+elif [[ "$OSTYPE" == "cygwin" ]]; then
+  echo "Cygwin is not supported"
+elif [[ "$OSTYPE" == "msys" ]]; then
+  echo "MSYS is not supported"
+elif [[ "$OSTYPE" == "win32" ]]; then
+  echo "Windows is not supported"
+elif [[ "$OSTYPE" == "freebsd"* ]]; then
+  echo "FreeBSD is not supported"
+else
+  echo "Unknown OS"
 fi
