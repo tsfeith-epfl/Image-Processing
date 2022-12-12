@@ -127,7 +127,8 @@ This will write the documentation to the `documentation` folder. To view it, go 
 `index.html` file in your browser.
 
 ## TODO
-
+Some functionality we wanted to implement/fix but didn't have time.
 - [ ] Allow for the generation of histograms for each channel, not just the intensity
 - [ ] Allow batch processing of images, instead of just one at a time
 - [ ] Allow more flexibility to the convolutional methods (padding, stride, dilation,...)
+- [ ] Fix histograms of PNG images with transparency. Right now, it still counts the transparent pixels for the intensity histogram.
