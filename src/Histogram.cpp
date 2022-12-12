@@ -178,6 +178,7 @@ vector<vector<double>> Histogram::computeHistogram(Image image) const {
  * It also saves the histogram in a file.
  * @param image Image to compute the histogram
  * @param output Path to save the histogram
+ * @param show Boolean to show the histogram
  */
 void Histogram::getHistogram(const Image &image, const string& output, bool show) const {
     if (!show and output.empty()) {
