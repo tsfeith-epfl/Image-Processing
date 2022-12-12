@@ -1,9 +1,9 @@
 
 # go to libraries and download the necessary ones
-cd libraries
+cd libraries || exit
 # download eigen
 git clone https://gitlab.com/libeigen/eigen.git
-cd ..
+cd .. || exit
 
 # install opencv
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -14,9 +14,9 @@ fi
 
 # install and build googletest (for unit tests)
 git clone https://github.com/google/googletest.git
-cd googletest
+cd googletest || exit
 mkdir build
-cd build
+cd build || exit
 cmake ..
 make
 
