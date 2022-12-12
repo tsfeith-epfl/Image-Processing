@@ -54,10 +54,10 @@ Histogram::Histogram(int bins, double min_range, double max_range) : Histogram(b
  * @param bins Number of bins for the histogram
  * @param min_range Minimum value of the range
  * @param max_range Maximum value of the range
- * @param log Boolean to choose the scale of the histogram
+ * @param log_scale Boolean to choose the scale of the histogram
  */
-Histogram::Histogram(int bins, double min_range, double max_range, bool log) : Histogram(bins, min_range, max_range) {
-    this->log = log;
+Histogram::Histogram(int bins, double min_range, double max_range, bool log_scale) : Histogram(bins, min_range, max_range) {
+    this->log = log_scale;
 }
 
 /*!

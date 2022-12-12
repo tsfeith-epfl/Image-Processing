@@ -29,7 +29,7 @@ public:
     Histogram();
     explicit Histogram(int bins);
     Histogram(int bins, double min_range, double max_range);
-    Histogram(int bins, double min_range, double max_range, bool log);
+    Histogram(int bins, double min_range, double max_range, bool log_scale);
 
     [[nodiscard]] int getBins() const;
     [[nodiscard]] double getMinRange() const;
