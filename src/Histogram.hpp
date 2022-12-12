@@ -43,7 +43,7 @@ public:
 
     [[nodiscard]] vector<vector<double>> computeHistogram(Image image) const;
 
-    void getHistogram(const Image& image, const string& output = "", bool show = false) const;
+    void getHistogram(const Image &image, bool show = false, const string &output = "") const;
 
 };
 

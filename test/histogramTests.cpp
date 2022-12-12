@@ -119,11 +119,11 @@ TEST(histogramTests, computedHistogramMatchesExpectedBehavior) {
 TEST(histogramTests, histogramGeneratorThrowsNoException) {
     Image image("teapot.png");
     Histogram histogram(10, 0, 1);
-    EXPECT_NO_THROW(histogram.getHistogram(image, "test.png", false));
+    EXPECT_NO_THROW(histogram.getHistogram(image, false, "test.png"));
 }
 
 TEST(histogramTest, histogramGeneratorThrowsExceptionIfNoShowAndNoSave) {
     Image image("teapot.png");
     Histogram histogram(10, 0, 1);
-    EXPECT_THROW(histogram.getHistogram(image, "", false), invalid_argument);
+    EXPECT_THROW(histogram.getHistogram(image, false, ""), invalid_argument);
 }

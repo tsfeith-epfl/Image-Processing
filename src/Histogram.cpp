@@ -179,7 +179,7 @@ vector<vector<double>> Histogram::computeHistogram(Image image) const {
  * @param image Image to compute the histogram
  * @param output Path to save the histogram
  */
-void Histogram::getHistogram(const Image &image, const string& output, bool show) const {
+void Histogram::getHistogram(const Image &image, bool show, const string &output) const {
     if (!show and output.empty()) {
         throw invalid_argument("This method needs to either show the histogram or save it to a file");
     }
