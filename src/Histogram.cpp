@@ -133,10 +133,10 @@ void Histogram::setMaxRange(double max_range) {
 
 /*!
  * @brief Setter for the scale of the histogram
- * @param log Boolean to choose the scale of the histogram
+ * @param log_scale Boolean to choose the scale of the histogram
  */
-void Histogram::setLog(bool log) {
-    this->log = log;
+void Histogram::setLogScale(bool log_scale) {
+    this->log = log_scale;
 }
 
 /*!

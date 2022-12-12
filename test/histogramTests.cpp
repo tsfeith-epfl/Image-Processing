@@ -94,7 +94,7 @@ TEST(histogramTests, maxRangeSetterCorrectlyUpdatesMaxRange) {
 
 TEST(histogramTests, logSetterCorrectlyUpdatesLog) {
     Histogram histogram;
-    histogram.setLog(true);
+    histogram.setLogScale(true);
     EXPECT_TRUE(histogram.getLog());
 }
 

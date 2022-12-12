@@ -39,7 +39,7 @@ public:
     void setBins(int bins);
     void setMinRange(double min_range);
     void setMaxRange(double max_range);
-    void setLog(bool log);
+    void setLogScale(bool log_scale);
 
     [[nodiscard]] vector<vector<double>> computeHistogram(Image image) const;
 
