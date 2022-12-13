@@ -100,7 +100,7 @@ int main(int argc, char **argv) {
 
         Denoiser denoiser(DENOISER_KERNEL_SIZE, DENOISER_SIGMA);
         Image denoised_image = denoiser.denoise(image, true);
-        denoised_image.save(output_name);
+        denoised_image.save(output_name, true);
     }
 
     if (mode == "histogram") {
@@ -129,7 +129,7 @@ int main(int argc, char **argv) {
         ContourExtractor contour_extractor(CONTOUR_EXTRACTOR_THRESHOLD, CONTOUR_EXTRACTOR_KERNEL_SIZE,
                                            CONTOUR_EXTRACTOR_SIGMA);
         Image contour_image = contour_extractor.extractContours(image, true);
-        contour_image.save(output_name);
+        contour_image.save(output_name, true);
     }
 
     return 0;
