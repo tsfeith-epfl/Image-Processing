@@ -43,44 +43,6 @@ This will create an executable called `main` in the `build` folder. To run it, s
 
 in the `build` folder. This command will show the help screen.
 
-## Repo Structure
-
-After setup, the project will have the following structure:
-
-    .
-    ├── build                  # Folder where the executable is created (not necessarily named build)
-    │   └── ...
-    ├── documentation          # Folder where Doxygen documentation is created
-    │   └── ...
-    ├── googletest             # Folder with the Google Test library
-    │   └── ...
-    ├── images                 # Folder where the images *must* be placed
-    │   └── ...
-    ├── output                 # Folder where the output images will be placed
-    │   └── ...
-    ├── libraries
-    │   └── eigen
-    ├── src
-    │   ├── ContourExtractor.cpp
-    │   ├── ContourExtractor.hpp
-    │   ├── Denoiser.cpp
-    │   ├── Denoiser.hpp
-    │   ├── Histogram.cpp
-    │   ├── Histogram.hpp
-    │   ├── Image.cpp
-    │   ├── Image.hpp
-    │   ├── location.hpp       # Helper file generated on build to know the absolute location of the project
-    │   ├── operations.cpp
-    │   └── operations.hpp
-    ├── test                   # Folder with all the unit tests
-    │   └── ...
-    ├── CMakeLists.txt
-    ├── Doxyfile.in
-    ├── main.cpp
-    ├── parameters.hpp
-    ├── README.md
-    └── setup.sh
-
 ## Usage
 
 ### Parameters
@@ -116,19 +78,76 @@ After running the program, the output will be placed in one of two places:
 - If the filename was provided as the name of the image inside the `images` folder, the output will be placed in the
 `output` folder.
 
-## Documentation
+## Features
+This project contains the following features:
+- Image denoising using Gaussian filtering
+  - Allow mean filtering as a special case of Gaussian filtering by setting the standard deviation to 0
+  - Allow the user to choose the size of the kernel and the standard deviation of the Gaussian kernel
+- Contour detection using thresholded Sobel filtering
+  - Allow the user to choose the threshold to use for the contour detection
+  - Allow the user to choose the size of the kernel and the standard deviation of the Gaussian kernel
+- Intensity histogram computation
+  - Allow the user to choose the number of bins to use in the histogram
+  - Allow the user to choose the range of values to use in the histogram
+  - Allow the user to choose whether to use a logarithmic scale for the histogram
+- FFT computation
+  - ????
+- Other general features
+  - Allow the user to provide the arguments in any order
+  - Allow the user to provide the input image as an absolute path, or as a relative path to the `images` folder
+  - Allow the user to provide a name for the output image, or use the same name as the input image
 
-There is extensive documentation for the project, which can be generated using Doxygen. To generate the documentation,
-run the following commands in the root directory of the project:
+## Tests
+This project contains a suite of unit tests, which are run using the Google Test framework. To run the tests, simply 
+run 
 
-    doxygen Doxyfile.in
+        ./test_suite
 
-This will write the documentation to the `documentation` folder. To view it, go into `documentation/html` and open the
-`index.html` file in your browser.
+in the `build` folder. This will run all the tests and show the results in the terminal.
+
+### Test Description
+There are comprehensive tests for each of the components of this program. An overview of the implemented tests is
+provided below:
+- Image object
+  - Valid construction (from file or from matrix)
+  - Throws exception on invalid construction
+  - Getters and setters work as expected
+  - Overloaded operators work as expected
+  - Channel reduction (RGB to grayscale) works as expected
+- Convolution operators
+  - Gives output with same size as input
+  - Unit kernel gives same output as input
+  - Throws expection on invalid parameters
+  - Can be applied directly to Image object or to a matrix
+  - Works on multichannel images
+- Gradient operators
+  - Checks for invalid images (smaller than kernel)
+  - Gradient returns correct values
+  - Gradient magnitude returns correct values
+  - Gradient direction only tested for exceptions
+- Denoising operator
+  - Constructor throws exception on invalid parameters
+  - Getters and setters work as expected
+- Intensity histogram operator
+  - Constructor throws exception on invalid parameters
+  - Getters and setters work as expected
+  - Histogram is computed correctly
+  - Histogram is plotted without exceptions
+- Contour extractor operator
+  - Constructor throws exception on invalid parameters
+  - Getters and setters work as expected
+  - Turns RGB image to grayscale
+  - Returns binary image
+- FFT operator
+  - ????
+
+For a more detailed description of the tests, please refer to the files in the `tests` folder. The test names should
+be self-explanatory.
 
 ## TODO
-Some functionality we wanted to implement/fix but didn't have time.
+There are a few functionalities that we would have liked to implement but there was not enough time. These are:
 - [ ] Allow for the generation of histograms for each channel, not just the intensity
 - [ ] Allow batch processing of images, instead of just one at a time
 - [ ] Allow more flexibility to the convolutional methods (padding, stride, dilation,...)
-- [ ] Fix histograms of PNG images with transparency. Right now, it still counts the transparent pixels for the intensity histogram.
+- [ ] Fix histograms of PNG images with transparency. Right now, it omits the alpha channel, meaning that the pixels
+take the value of the first three channels. The most affected mode by this is the histogram.
