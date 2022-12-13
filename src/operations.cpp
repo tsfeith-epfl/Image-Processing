@@ -5,7 +5,6 @@
 #include <Eigen/Eigen>
 #include "operations.hpp"
 
-
 // -------------------------------------- //
 // --- Default Convolution Operations --- //
 // -------------------------------------- //
