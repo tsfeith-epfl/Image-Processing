@@ -35,8 +35,7 @@ Image::Image(string filename) {
         filename = loc + "/images/" + filename;
         cout << "File not found.\nTrying to open " << filename << endl;
         need_retry = true;
-    }
-    else {
+    } else {
         cout << "File " << filename << " found." << endl;
         need_retry = false;
         this->absolute_path = true;
@@ -46,8 +45,7 @@ Image::Image(string filename) {
         if (!file_retry.good()) {
             throw invalid_argument(
                     "File not found. Make sure to either give the absolute path or place the file in the images folder.");
-        }
-        else {
+        } else {
             cout << "File " << filename << " found.\n" << endl;
         }
         file_retry.close();
@@ -138,7 +136,7 @@ Image::Image(vector<Eigen::ArrayXXd> data) {
 
     int first_width = data[0].cols();
     int first_height = data[0].rows();
-    for (auto & i : data) {
+    for (auto &i: data) {
         if (i.cols() == 0 || i.rows() == 0) {
             throw std::invalid_argument("Data must not be empty");
         }
@@ -164,7 +162,7 @@ Image::Image(vector<Eigen::ArrayXXd> data) {
  * @details This constructor creates a copy of the given image.
  * @param other The image to be copied.
  */
-Image::Image(const Image& image) {
+Image::Image(const Image &image) {
     this->width = image.width;
     this->height = image.height;
     this->channels = image.channels;
@@ -215,7 +213,8 @@ vector<Eigen::ArrayXXd> Image::getData() const {
  */
 Eigen::ArrayXXd Image::getData(int channel) const {
     if (channel < 0 || channel >= this->channels) {
-        throw std::invalid_argument("Channel selected is not valid, must be between 0 and " + to_string(this->channels - 1));
+        throw std::invalid_argument(
+                "Channel selected is not valid, must be between 0 and " + to_string(this->channels - 1));
     }
     return this->data[channel];
 }
@@ -229,7 +228,9 @@ Eigen::ArrayXXd Image::getData(int channel) const {
  */
 Eigen::ArrayXd Image::getPixel(int x, int y) const {
     if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
-        throw std::invalid_argument("Pixel selected is not valid, must be between (0, 0) and (" + to_string(this->width - 1) + ", " + to_string(this->height - 1) + ")");
+        throw std::invalid_argument(
+                "Pixel selected is not valid, must be between (0, 0) and (" + to_string(this->width - 1) + ", " +
+                to_string(this->height - 1) + ")");
     }
     Eigen::ArrayXd pixel(this->channels);
     for (int i = 0; i < this->channels; i++) {
@@ -248,10 +249,13 @@ Eigen::ArrayXd Image::getPixel(int x, int y) const {
  */
 double Image::getPixel(int x, int y, int channel) const {
     if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
-        throw std::invalid_argument("Pixel selected is not valid, must be between (0, 0) and (" + to_string(this->width - 1) + ", " + to_string(this->height - 1) + ")");
+        throw std::invalid_argument(
+                "Pixel selected is not valid, must be between (0, 0) and (" + to_string(this->width - 1) + ", " +
+                to_string(this->height - 1) + ")");
     }
     if (channel < 0 || channel >= this->channels) {
-        throw std::invalid_argument("Channel selected is not valid, must be between 0 and " + to_string(this->channels - 1));
+        throw std::invalid_argument(
+                "Channel selected is not valid, must be between 0 and " + to_string(this->channels - 1));
     }
     return this->data[channel](y, x);
 }
@@ -271,7 +275,7 @@ string Image::getPath() const {
  * @details If the image was created from an image file using an absolute path, this method returns true. If if was
  * created using a relative path or from a vector of arrays, it returns false.
  */
- bool Image::usedAbsolutePath() const {
+bool Image::usedAbsolutePath() const {
     return this->absolute_path;
 }
 
@@ -286,7 +290,7 @@ void Image::setData(vector<Eigen::ArrayXXd> new_data) {
     if (new_data.size() != this->channels) {
         throw std::invalid_argument("Number of channels in new data must match number of channels in image");
     }
-    for (auto & i : new_data) {
+    for (auto &i: new_data) {
         if (i.rows() != this->height || i.cols() != this->width) {
             throw std::invalid_argument("Image dimensions do not match data dimensions");
         }
@@ -311,7 +315,8 @@ void Image::setData(vector<Eigen::ArrayXXd> new_data) {
  */
 void Image::setData(int channel, Eigen::ArrayXXd new_data) {
     if (channel < 0 || channel >= this->channels) {
-        throw std::invalid_argument("Channel selected is not valid, must be between 0 and " + to_string(this->channels - 1));
+        throw std::invalid_argument(
+                "Channel selected is not valid, must be between 0 and " + to_string(this->channels - 1));
     }
     if (new_data.rows() != this->height || new_data.cols() != this->width) {
         throw std::invalid_argument("Image dimensions do not match data dimensions");
@@ -337,7 +342,9 @@ void Image::setData(int channel, Eigen::ArrayXXd new_data) {
  */
 void Image::setPixel(int x, int y, Eigen::ArrayXd pixel) {
     if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
-        throw std::invalid_argument("Pixel selected is not valid, must be between (0, 0) and (" + to_string(this->width - 1) + ", " + to_string(this->height - 1) + ")");
+        throw std::invalid_argument(
+                "Pixel selected is not valid, must be between (0, 0) and (" + to_string(this->width - 1) + ", " +
+                to_string(this->height - 1) + ")");
     }
     if (pixel.size() != this->channels) {
         throw std::invalid_argument("Pixel must have the same number of channels as the image");
@@ -364,10 +371,13 @@ void Image::setPixel(int x, int y, Eigen::ArrayXd pixel) {
  */
 void Image::setPixel(int x, int y, int channel, double pixel) {
     if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
-        throw std::invalid_argument("Pixel selected is not valid, must be between (0, 0) and (" + to_string(this->width - 1) + ", " + to_string(this->height - 1) + ")");
+        throw std::invalid_argument(
+                "Pixel selected is not valid, must be between (0, 0) and (" + to_string(this->width - 1) + ", " +
+                to_string(this->height - 1) + ")");
     }
     if (channel < 0 || channel >= this->channels) {
-        throw std::invalid_argument("Channel selected is not valid, must be between 0 and " + to_string(this->channels - 1));
+        throw std::invalid_argument(
+                "Channel selected is not valid, must be between 0 and " + to_string(this->channels - 1));
     }
     if (pixel < 0 || pixel > 1) {
         throw std::invalid_argument("Pixel values must be between 0 and 1");
@@ -383,7 +393,8 @@ void Image::setPixel(int x, int y, int channel, double pixel) {
  */
 Eigen::ArrayXXd Image::operator()(int channel) const {
     if (channel < 0 || channel >= this->channels) {
-        throw std::invalid_argument("Channel selected is not valid, must be between 0 and " + to_string(this->channels - 1));
+        throw std::invalid_argument(
+                "Channel selected is not valid, must be between 0 and " + to_string(this->channels - 1));
     }
     return this->getData(channel);
 }
@@ -396,7 +407,9 @@ Eigen::ArrayXXd Image::operator()(int channel) const {
  */
 Eigen::ArrayXd Image::operator()(int x, int y) const {
     if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
-        throw std::invalid_argument("Pixel selected is not valid, must be between (0, 0) and (" + to_string(this->width - 1) + ", " + to_string(this->height - 1) + ")");
+        throw std::invalid_argument(
+                "Pixel selected is not valid, must be between (0, 0) and (" + to_string(this->width - 1) + ", " +
+                to_string(this->height - 1) + ")");
     }
     return this->getPixel(x, y);
 }
@@ -410,10 +423,13 @@ Eigen::ArrayXd Image::operator()(int x, int y) const {
  */
 double Image::operator()(int x, int y, int channel) const {
     if (x < 0 || x >= this->width || y < 0 || y >= this->height) {
-        throw std::invalid_argument("Pixel selected is not valid, must be between (0, 0) and (" + to_string(this->width - 1) + ", " + to_string(this->height - 1) + ")");
+        throw std::invalid_argument(
+                "Pixel selected is not valid, must be between (0, 0) and (" + to_string(this->width - 1) + ", " +
+                to_string(this->height - 1) + ")");
     }
     if (channel < 0 || channel >= this->channels) {
-        throw std::invalid_argument("Channel selected is not valid, must be between 0 and " + to_string(this->channels - 1));
+        throw std::invalid_argument(
+                "Channel selected is not valid, must be between 0 and " + to_string(this->channels - 1));
     }
     return this->getPixel(x, y, channel);
 }
@@ -443,16 +459,14 @@ cv::Mat Image::toCvMat() {
  * @param window_name The name of the window.
  * @return
  */
-void Image::show(const string& window_name) {
+void Image::show(const string &window_name) {
     cv::Mat image;
     if (this->channels == 1) {
         Image expanded_image(3, this->data[0]);
         image = expanded_image.toCvMat();
-    }
-    else if (this->channels == 3) {
+    } else if (this->channels == 3) {
         image = this->toCvMat();
-    }
-    else {
+    } else {
         throw std::invalid_argument("Image must have 1 or 3 channels for show to work");
     }
     cv::namedWindow(window_name, cv::WINDOW_AUTOSIZE);
@@ -466,19 +480,17 @@ void Image::show(const string& window_name) {
  * @param filename The name of the file.
  * @return
  */
-void Image::save(string filename) {
+void Image::save(string filename, bool absolute_path) {
     cv::Mat image;
     if (this->channels == 1) {
         Image expanded_image(3, this->data[0]);
         image = expanded_image.toCvMat();
-    }
-    else if (this->channels == 3) {
+    } else if (this->channels == 3) {
         image = this->toCvMat();
-    }
-    else {
+    } else {
         throw std::invalid_argument("Image must have 1 or 3 channels for show to work");
     }
-    if (this->absolute_path) {
+    if (this->absolute_path || absolute_path) {
         cv::imwrite(filename, image);
     } else {
         filename = loc + "/output/" + filename;
@@ -532,7 +544,7 @@ Image Image::reduceChannels() {
     if (this->channels != 3) {
         cerr << "Warning: For images with 3 channels, reduction to 1 channels is done by "
                 "perceptual conversion to grayscale. For images with " << this->channels
-                << " channels, reduction to 1 channel is done by averaging all channels." << endl;
+             << " channels, reduction to 1 channel is done by averaging all channels." << endl;
         for (int i = 0; i < this->height; i++) {
             for (int j = 0; j < this->width; j++) {
                 for (int k = 0; k < this->channels; k++) {
@@ -541,12 +553,12 @@ Image Image::reduceChannels() {
                 new_data(i, j) /= this->channels;
             }
         }
-    }
-    else {
+    } else {
         for (int i = 0; i < this->height; i++) {
             for (int j = 0; j < this->width; j++) {
                 // Formula for converting to grayscale from https://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
-                new_data(i, j) = 0.2126 * this->data[0](i, j) + 0.7152 * this->data[1](i, j) + 0.0722 * this->data[2](i, j);
+                new_data(i, j) =
+                        0.2126 * this->data[0](i, j) + 0.7152 * this->data[1](i, j) + 0.0722 * this->data[2](i, j);
             }
         }
     }

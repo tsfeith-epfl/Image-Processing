@@ -56,7 +56,7 @@ public:
     bool operator!=(const Image& image) const;
 
     void show(const string& window_name = "window");
-    void save(string filename);
+    void save(string filename, bool absolute_path = false);
     cv::Mat toCvMat();
     Image reduceChannels();
 };

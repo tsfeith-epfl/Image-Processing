@@ -378,7 +378,7 @@ TEST_F(imageTests, conversionToCvMatWorks) {
 
 TEST_F(imageTests, saveImageWorks) {
     Image image(input_vector);
-    image.save("test_image.png");
+    image.save("test_image.png", false);
 
 }
 
