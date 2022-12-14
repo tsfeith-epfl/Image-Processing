@@ -12,24 +12,14 @@
 #include "parameters.hpp"
 #include <fstream>
 #include "operations.hpp"
-#include <type_traits>
+#include "FourierImage.hpp"
 #include <complex>
 
 using namespace std;
 
-int main(){
-    /*
-    // test normalize with int array
-    Eigen::ArrayXXf testArray(3,3);
-    testArray << 1, 2, 3,
-                 4, 5, 6,
-                 7, 8, 9;
-    cout << normalize(testArray) << endl;
-
-    */
-
+int main_old(){
     // test fft2 with image
-    Image img = Image("ft_saturn_horizontal.png");
+    Image img = Image("tiger.png");
     cout << "Image size: " << img.getWidth() << " x " << img.getHeight() << endl;
     img = img.reduceChannels();
     // print min and max values
@@ -63,6 +53,36 @@ int main(){
     img_idft_img.show("IDFT");
     /*
     */
+    return 0;
+}
+
+int main(){
+    // test dft2
+    Eigen::ArrayXXd input = Eigen::ArrayXXd::Random(4,4);
+    input << 1, 2, 3, 4,
+             5, 6, 7, 8,
+             9, 10, 11, 12,
+             13, 14, 15, 16;
+    input = input/16;
+    FourierImage img = FourierImage(1,input);
+    cout << "Input: " << endl << input << endl;
+    cout << "Fourier Transform" << endl;
+    img.applyTransform(true);
+    cout << img.getTransform() << endl;
+
+    /*
+    // show magnitude
+    Image(normalize(img.getMagnitude(true))).show("Magnitude (log)");
+
+    // apply high pass filter
+    img.applyBandPassFilter(0.1, 0.5);
+
+    // show magnitude
+    Image(normalize(img.getMagnitude(true))).show("Magnitude (log) - band pass");
+
+    // show inverse transform
+    FourierImage(img.applyInverseTransform(true)).show("Inverse transform");
+     */
     return 0;
 }
 
