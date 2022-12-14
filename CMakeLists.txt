@@ -14,8 +14,33 @@ include_directories(libraries/eigen)
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
+include(CheckCXXCompilerFlag)
+
+check_cxx_compiler_flag("-march=native" _march_native_works)
+check_cxx_compiler_flag("-xHost" _xhost_works)
+
+include(CheckCXXCompilerFlag)
+
+check_cxx_compiler_flag("-march=native" _march_native_works)
+check_cxx_compiler_flag("-xHost" _xhost_works)
+
+set(_CXX_FLAGS)
+if(_march_native_works)
+  message(STATUS "Using processor's vector instructions (-march=native compiler flag set)")
+  set(_CXX_FLAGS "-march=native")
+elseif(_xhost_works)
+  message(STATUS "Using processor's vector instructions (-xHost compiler flag set)")
+  set(_CXX_FLAGS "-xHost")
+else()
+  message(STATUS "No suitable compiler flag found for vectorization")
+endif()
+
+set(_CXX_FLAGS "-fno-math-errno")
+set(_CXX_FLAGS "-O3")
+
 add_executable(main main.cpp src/operations.cpp src/Image.cpp src/Denoiser.cpp parameters.hpp src/ContourExtractor.cpp src/Histogram.cpp src/FourierImage.cpp src/FourierImage.hpp)
 target_link_libraries(main ${OpenCV_LIBS})
+target_compile_options(main PRIVATE ${_CXX_FLAGS})
 
 # REMOVE BEFORE SUBMISSION
 add_executable(andre andre.cpp src/operations.cpp src/Image.cpp src/Denoiser.cpp parameters.hpp src/ContourExtractor.cpp src/Histogram.cpp src/FourierImage.cpp src/FourierImage.hpp)
