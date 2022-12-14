@@ -5,25 +5,15 @@
 #ifndef IMAGE_PROCESSING_OPERATIONS_HPP
 #define IMAGE_PROCESSING_OPERATIONS_HPP
 
+
 #include <Eigen/Eigen>
 #include <vector>
 #include "Image.hpp"
 
 // General //
-/*!
- * Normalizes the input array.
- * @details This function normalizes the input array to the range [0, 1], and converts it to a double array.
- * @param input Input array
- * @return Normalized array
- */
 template <typename T>
-Eigen::ArrayXXd normalize(const Eigen::ArrayBase<T>& array){
-    //Note: we implement this here because otherwise we would have to provide the template argument (aka normalize<double>)
-    // every time we call this function.
-    Eigen::ArrayXXd array_doubles = array.template cast<double>();
-    array_doubles = (array_doubles - array_doubles.minCoeff()) / (array_doubles.maxCoeff() - array_doubles.minCoeff());
-    return array_doubles;
-}
+Eigen::ArrayXXd normalize(const Eigen::ArrayBase<T>& input);
+
 
 // Convolution //
 Eigen::ArrayXXd applyConvolution(Eigen::ArrayXXd input, Eigen::ArrayXXd kernel);
@@ -38,7 +28,7 @@ Image computeGradientMagnitude(const Image& input);
 Image applyThreshold(const Image& input, double threshold);
 
 // Fourier Transform //
-
-
+Eigen::ArrayXcd dft(Eigen::ArrayXcd input, bool inverse = false);
+Eigen::ArrayXXcd dft2(Eigen::ArrayXXcd input, bool inverse = false, bool show_progress = false);
 
 #endif //IMAGE_PROCESSING_OPERATIONS_HPP

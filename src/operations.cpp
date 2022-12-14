@@ -5,6 +5,24 @@
 #include <Eigen/Eigen>
 #include "operations.hpp"
 
+
+/*!
+ * Normalizes the input array.
+ * @details This function normalizes the input array to the range [0, 1], and converts it to a double array.
+ * @param input Input array
+ * @return Normalized array
+ */
+template <typename T>
+Eigen::ArrayXXd normalize(const Eigen::ArrayBase<T>& input) {
+    Eigen::ArrayXXd output = input.template cast<double>();
+    output = (output - output.minCoeff()) / (output.maxCoeff() - output.minCoeff());
+    return output;
+}
+// for templates to work between a .hpp and a .cpp file, we must do this
+template Eigen::ArrayXXd normalize<Eigen::ArrayXXd>(const Eigen::ArrayBase<Eigen::ArrayXXd>& input);
+template Eigen::ArrayXXd normalize<Eigen::ArrayXXi>(const Eigen::ArrayBase<Eigen::ArrayXXi>& input);
+template Eigen::ArrayXXd normalize<Eigen::ArrayXXf>(const Eigen::ArrayBase<Eigen::ArrayXXf>& input);
+template Eigen::ArrayXXd normalize<Eigen::Array<long double, Eigen::Dynamic, Eigen::Dynamic>>(const Eigen::ArrayBase<Eigen::Array<long double, Eigen::Dynamic, Eigen::Dynamic>>& input);
 // -------------------------------------- //
 // --- Default Convolution Operations --- //
 // -------------------------------------- //
@@ -204,6 +222,79 @@ Image applyThreshold(const Image& input, double threshold) {
         }
     }
     return Image(output);
+}
+
+// ------------------------------------ //
+// --- Fourier Transform Operations --- //
+// ------------------------------------ //
+
+/*!
+ * @brief Function to compute the Fourier transform of a 1D signal
+ * @details This function computes the Fourier transform of a 1D complex double Eigen Array.
+ * @param input Input signal
+ * @param inverse Boolean to indicate whether to compute the inverse Fourier transform.
+ * @return Output signal as an Eigen::ArrayXcd
+ */
+Eigen::ArrayXcd dft(Eigen::ArrayXcd input, bool inverse){
+    int N = input.size();
+    Eigen::ArrayXcd output = Eigen::ArrayXcd::Zero(N);
+
+    complex<double> omega;
+    for (int k = -N / 2; k < N / 2; k++) {
+        for (int n = -N / 2; n < N / 2; n++) {
+            if (inverse) {
+                omega = std::exp(std::complex<double>(0, 2 * M_PI * k * n / N));
+            } else {
+                omega = std::exp(std::complex<double>(0, -2 * M_PI * k * n / N));
+            }
+            output(k + N / 2) += input(n + N / 2) * omega;
+        }
+    }
+    if (inverse) {
+        output /= N;
+    }
+
+    return output;
+}
+
+/*!
+ * @brief Function to compute the Fourier transform of a 2D signal
+ * @details This function computes the Fourier transform of a 2D complex Eigen Array. It casts the output to a complex double.
+ * The 2D DFT is computed by first computing the 1D DFT along each row, and then computing the 1D DFT along each column.
+ * @param input Input signal
+ * @param inverse Boolean to indicate whether to compute the inverse Fourier transform.
+ * @param show_progress Boolean to indicate whether to print progress.
+ * @return Output signal as an Eigen::ArrayXXcd
+ */
+Eigen::ArrayXXcd dft2(Eigen::ArrayXXcd input, bool inverse, bool show_progress){
+    int N = input.rows();
+    int M = input.cols();
+    Eigen::ArrayXXcd output = Eigen::ArrayXXcd::Zero(N, M);
+    Eigen::ArrayXcd row = Eigen::ArrayXcd::Zero(N);
+    Eigen::ArrayXcd col = Eigen::ArrayXcd::Zero(M);
+
+    for (int i = 0; i < N; i++){
+        if (show_progress) {
+            cout << "\rComputing row " << i << " of " << N << flush;
+        }
+        row = input.row(i);
+        output.row(i) = dft(row, inverse);
+    }
+
+    if (show_progress) cout << endl;
+
+    for (int j = 0; j < M; j++){
+        if (show_progress) {
+            cout << "\rComputing column " << j << " of " << M << flush;
+        }
+        col = output.col(j);
+        output.col(j) = dft(col, inverse);
+    }
+    if (show_progress){
+        cout << endl;
+    }
+
+    return output;
 }
 
 
