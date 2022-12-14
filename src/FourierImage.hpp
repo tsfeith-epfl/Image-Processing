@@ -10,10 +10,20 @@
 
 class FourierImage : public Image {
 private:
-    vector<Eigen::ArrayXXcd> transform_data;
+    Eigen::ArrayXXcd transform;
 
 public:
 
+    void applyTransform();
+    void applyInverseTransform();
+
+    [[nodiscard]] Eigen::ArrayXXcd getTransform() const;
+    [[nodiscard]] Eigen::ArrayXXd getMagnitude() const;
+    [[nodiscard]] Eigen::ArrayXXd getPhase() const;
+    [[nodiscard]] Eigen::ArrayXXd getReal() const;
+    [[nodiscard]] Eigen::ArrayXXd getImaginary() const;
+
+    void setTransform(const Eigen::ArrayXXcd& transform);
 };
 
 
