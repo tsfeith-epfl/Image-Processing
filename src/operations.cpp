@@ -231,6 +231,7 @@ Image applyThreshold(const Image& input, double threshold) {
 /*!
  * @brief Function to compute the Fourier transform of a 1D signal
  * @details This function computes the Fourier transform of a 1D complex double Eigen Array.
+ * The frequency domain has its origin at the center of the array.
  * @param input Input signal
  * @param inverse Boolean to indicate whether to compute the inverse Fourier transform.
  * @return Output signal as an Eigen::ArrayXcd
@@ -240,14 +241,14 @@ Eigen::ArrayXcd dft(Eigen::ArrayXcd input, bool inverse){
     Eigen::ArrayXcd output = Eigen::ArrayXcd::Zero(N);
 
     complex<double> omega;
-    for (int k = -N / 2; k < N / 2; k++) {
-        for (int n = -N / 2; n < N / 2; n++) {
+    for (int k = 0; k < N; k++) {
+        for (int n = 0; n < N; n++) {
             if (inverse) {
-                omega = std::exp(std::complex<double>(0, 2 * M_PI * k * n / N));
+                omega = std::exp(std::complex<double>(0, 2 * M_PI * (k - N/2)* n / N));
             } else {
-                omega = std::exp(std::complex<double>(0, -2 * M_PI * k * n / N));
+                omega = std::exp(std::complex<double>(0, -2 * M_PI * (k - N/2) * n / N));
             }
-            output(k + N / 2) += input(n + N / 2) * omega;
+            output(k) += input(n) * omega;
         }
     }
     if (inverse) {
