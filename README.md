@@ -47,7 +47,7 @@ in the `build` folder. This command will show the help screen.
 
 ### Parameters
 The parameters for the program are stored in a `.hpp` file called `parameters.hpp`. It allows to easily tweak the 
-parameters of the program without having to recompile it or pass them as arguments. Each mode of operation has different
+parameters of the program without having to pass them as arguments. Each mode of operation has different
 parameters, and they are described below.
 - Denoising
   - sigma: standard deviation of the Gaussian kernel to apply to the image. Set to 0 to use mean filtering. Default: 1.0
@@ -61,6 +61,8 @@ parameters, and they are described below.
   - max range: maximum value to use in the histogram. Must be between in (`min_range`, 1.]. Default: 1.0
   - min range: minimum value to use in the histogram. Must be between in [0., `max_range`). Default: 0.0
   - log: whether to use a logarithmic scale for the histogram. Default: false
+- Fourier Transform
+  - ???
 
 ### Running the program
 To run the program, simply run the executable created in the `build` folder. Even though the program reads the parameters
@@ -69,9 +71,15 @@ from the parameters.hpp` file, there are still some parameters that must be pass
   - denoise: denoises the image
   - contour: detects the contours of the image
   - histogram: computes the intensity histogram of the image
+  - dft: compute the fourier transform of the image, and apply one of the possible operations on the frequency domain
 - input: name of the input image (including the extension). REQUIRED
   - It can be given as an absolute path, or as a relative path to the `images` folder. 
 - output: name of the output image (including the extension). OPTIONAL (default: same as input image)
+
+So, for example, running the program for an image 'teapot.png' that we want to denoise, would require the following
+command
+
+    ./main --input teapot.png --mode denoise
 
 After running the program, the output will be placed in one of two places:
 - If the filename was provided as an absolute path, the output will be placed in the same folder as the input image;
@@ -90,7 +98,7 @@ This project contains the following features:
   - Allow the user to choose the number of bins to use in the histogram
   - Allow the user to choose the range of values to use in the histogram
   - Allow the user to choose whether to use a logarithmic scale for the histogram
-- FFT computation
+- DFT computation
   - ????
 - Other general features
   - Allow the user to provide the arguments in any order
@@ -131,6 +139,7 @@ provided below:
 - Intensity histogram operator
   - Constructor throws exception on invalid parameters
   - Getters and setters work as expected
+  - Histogram works for RGB and Grayscale images
   - Histogram is computed correctly
   - Histogram is plotted without exceptions
 - Contour extractor operator
@@ -138,7 +147,7 @@ provided below:
   - Getters and setters work as expected
   - Turns RGB image to grayscale
   - Returns binary image
-- FFT operator
+- DFT operator
   - ????
 
 For a more detailed description of the tests, please refer to the files in the `tests` folder. The test names should
@@ -151,3 +160,4 @@ There are a few functionalities that we would have liked to implement but there 
 - [ ] Allow more flexibility to the convolutional methods (padding, stride, dilation,...)
 - [ ] Fix histograms of PNG images with transparency. Right now, it omits the alpha channel, meaning that the pixels
 take the value of the first three channels. The most affected mode by this is the histogram.
+- [ ] Switch the DFT algorithm to use FFT (faster)
