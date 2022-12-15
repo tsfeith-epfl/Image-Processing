@@ -57,32 +57,39 @@ int main_old(){
 }
 
 int main(){
-    // test dft2
+    /*// test dft2 with array
     Eigen::ArrayXXd input = Eigen::ArrayXXd::Random(4,4);
     input << 1, 2, 3, 4,
              5, 6, 7, 8,
              9, 10, 11, 12,
              13, 14, 15, 16;
-    input = input/16;
-    FourierImage img = FourierImage(1,input);
+    input = normalize(input);
     cout << "Input: " << endl << input << endl;
-    cout << "Fourier Transform" << endl;
-    img.applyTransform(true);
-    cout << img.getTransform() << endl;
+    cout << "Fourier transform: " << endl << dft2(input, false) << endl;
+    cout << "Inverse Fourier transform: " << endl << dft2(dft2(input), true).real() << endl;
 
-    /*
+    // test dft with array
+    Eigen::ArrayXd input2 = Eigen::ArrayXd::Random(4);
+    input2 << 1, 2, 3, 4;
+    cout << "Input: " << endl << input2 << endl;
+    cout << "Fourier transform: " << endl << dft(input2, false) << endl;
+     */
+    // test dft2 with image
+    FourierImage img = FourierImage("tiger.png");
+    img.show("Original");
+    img.applyTransform(true);
     // show magnitude
     Image(normalize(img.getMagnitude(true))).show("Magnitude (log)");
 
     // apply high pass filter
-    img.applyBandPassFilter(0.1, 0.5);
+    //img.applyBandPassFilter(0, 1);
 
     // show magnitude
     Image(normalize(img.getMagnitude(true))).show("Magnitude (log) - band pass");
 
     // show inverse transform
     FourierImage(img.applyInverseTransform(true)).show("Inverse transform");
-     */
+
     return 0;
 }
 
