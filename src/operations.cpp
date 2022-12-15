@@ -91,7 +91,7 @@ Image applyConvolution(const Image& input, const Eigen::ArrayXXd& kernel) {
 
     //normalize each channel to 0,1
     for (int i = 0; i < input.getChannels(); i++) {
-        output[i] = (output[i] - output[i].minCoeff()) / (output[i].maxCoeff() - output[i].minCoeff());
+        output[i] = normalize(output[i]);
     }
 
     return Image(output);
@@ -169,7 +169,7 @@ Image computeGradientMagnitude(const Image& input){
     }
 
     // normalize output to [0,1]
-    output = (output - output.minCoeff()) / (output.maxCoeff() - output.minCoeff());
+    output = normalize(output);
 
     return Image(output);
 }
