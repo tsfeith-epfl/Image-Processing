@@ -95,6 +95,7 @@ This project contains the following features:
 - The Image class
   - Load gray scale or color images from path.
   - Create images from Eigen arrays.
+  - Apply convolutions on images.
   - Convert color image to gray scale using [colorimetric conversion](https://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale).
   - Display images on screen.
   - Save image to output file.
