@@ -10,6 +10,7 @@
  * @brief Applies the Fourier Transform to the image.
  * @details Applies the Fourier Transform to the image and stores the result in the transform attribute.
  * @param show_progress Whether to show the progress of the computation.
+ * @return
  */
 void FourierImage::applyTransform(bool show_progress) {
     Eigen::ArrayXXcd input;
@@ -130,6 +131,7 @@ Eigen::ArrayXXd FourierImage::getImaginary() const {
  * @brief Sets the transform attribute.
  * @details Sets the transform attribute.
  * @param transform The new transform attribute.
+ * @return
  */
 void FourierImage::setTransform(const Eigen::ArrayXXcd& transform){
     // check if transform is valid
@@ -148,6 +150,7 @@ void FourierImage::setTransform(const Eigen::ArrayXXcd& transform){
  * @details Applies a low pass filter to the transform attribute.
  * @param cutoff The cutoff frequency of the filter. It's the radius of the circle that will be kept,
  * relative to the minimum dimension of the image.
+ * @return
  */
 void FourierImage::applyLowPassFilter(double cutoff) {
     // check if transform has been applied
@@ -184,6 +187,7 @@ void FourierImage::applyLowPassFilter(double cutoff) {
  * @details Applies a high pass filter to the transform attribute.
  * @param cutoff The cutoff frequency of the filter. It's the radius of the circle that will be removed,
  * relative to the minimum dimension of the image.
+ * @return
  */
 void FourierImage::applyHighPassFilter(double cutoff){
     // check if transform has been applied
@@ -222,6 +226,7 @@ void FourierImage::applyHighPassFilter(double cutoff){
  * relative to the minimum dimension of the image.
  * @param cutoff2 The second cutoff frequency of the filter. It's the radius of the outer circle that will be removed,
  * relative to the minimum dimension of the image.
+ * @return
  */
 void FourierImage::applyBandPassFilter(double cutoff1, double cutoff2){
     // check if transform has been applied
@@ -238,4 +243,3 @@ void FourierImage::applyBandPassFilter(double cutoff1, double cutoff2){
     // apply low pass filter
     this->applyLowPassFilter(cutoff2);
 }
-
