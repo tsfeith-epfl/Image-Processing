@@ -2,14 +2,6 @@
 // Created by André Charneca on 06.12.22.
 //
 
-//NOTE: tests missing for the following methods:
-// - ContourExtractor::extractContours()
-// - ContourExtractor::getThreshold()
-// - ContourExtractor::getDenoiser()
-// - ContourExtractor::setThreshold()
-// - ContourExtractor::setDenoiser()
-
-
 #include "ContourExtractor.hpp"
 #include <gtest/gtest.h>
 
@@ -135,6 +127,4 @@ TEST_F(contourExtractorTests, extractContoursReturnsBinaryImage) {
         }
     }
 }
-
-//do missing tests
 
