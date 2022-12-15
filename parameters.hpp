@@ -25,8 +25,8 @@ bool LOG_SCALE = false;
 /* Fourier Transform Parameters */
 bool SHOW_FOURIER_PROGRESS = true;
 bool SHOW_FOURIER_LOG_MAGNITUDE = true;
-double LOW_CUTOFF = 0.5;
+double LOW_CUTOFF = 0.03;
 double HIGH_CUTOFF = 0.9;
-string FILTER_TYPE = "low"; // "band", "low", "high"
+string FILTER_TYPE = "band"; // "band", "low", "high"
 
 #endif //IMAGEPROCESSING_PARAMETERS_HPP

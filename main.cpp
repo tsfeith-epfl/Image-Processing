@@ -178,10 +178,7 @@ int main(int argc, char **argv) {
             FourierImage fourier_image(input_name);
             cout << "Applying Fourier Transform..." << endl;
             fourier_image.applyTransform(SHOW_FOURIER_PROGRESS);
-
-            if (SHOW_FOURIER_LOG_MAGNITUDE) {
-                Image(normalize(fourier_image.getMagnitude(true))).show("Magnitude (log) - Original");
-            }
+            FourierImage original_fourier_image = fourier_image;
 
             if (FILTER_TYPE == "band") {
                 fourier_image.applyBandPassFilter(LOW_CUTOFF, HIGH_CUTOFF);
@@ -191,11 +188,15 @@ int main(int argc, char **argv) {
                 fourier_image.applyLowPassFilter(LOW_CUTOFF);
             }
 
-            if (SHOW_FOURIER_LOG_MAGNITUDE) {
-                Image(normalize(fourier_image.getMagnitude(true))).show("Magnitude (log) - Filtered");
-            }
+
             cout << "Applying Inverse Fourier Transform..." << endl;
             FourierImage filtered = fourier_image.applyInverseTransform(SHOW_FOURIER_PROGRESS);
+
+            if (SHOW_FOURIER_LOG_MAGNITUDE) {
+                Image(normalize(original_fourier_image.getMagnitude(true))).show("Magnitude (log) - Original");
+                Image(normalize(filtered.getMagnitude(true))).show("Magnitude (log) - Filtered");
+            }
+
             filtered.show("Filtered Image");
             filtered.save(output_name, true);
 

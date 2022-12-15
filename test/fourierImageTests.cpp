@@ -43,9 +43,6 @@ protected:
     Eigen::ArrayXXcd expected_transf;
 };
 
-// we dont need to test constructors, since they are tested in imageTests
-
-// test getters and setters specific to fourier image
 
 TEST_F(fourierImageTests, applyTransformComputesFTCorrectly) {
  // test 3 channel image
@@ -251,22 +248,3 @@ TEST_F(fourierImageTests, bandPassFilterWithSameCutoffsReturnsZeroImage) {
         }
     }
 }
-
-/*
-TEST_F(fourierImageTests, applyLowPassFilterReturnsCorrectTransform) {
-    Eigen::ArrayXXcd expected_transf_filtered = Eigen::ArrayXXcd::Zero(4, 4);
-    expected_transf_filtered(1,1) = expected_transf(1,1);
-    expected_transf_filtered(1,2) = expected_transf(1,2);
-    expected_transf_filtered(2,1) = expected_transf(2,1);
-    expected_transf_filtered(2,2) = expected_transf(2,2);
-
-    image_1ch.applyLowPassFilter(0.71);
-    cout << "expected transf filtered" << endl;
-    cout << expected_transf_filtered << endl;
-
-    cout << "actual transf filtered" << endl;
-    cout << image_1ch.getTransform() << endl;
-
-    // complete this
-}
-*/
