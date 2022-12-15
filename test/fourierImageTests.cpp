@@ -69,13 +69,12 @@ TEST_F(fourierImageTests, applyTransformComputesFTCorrectly) {
 
 TEST_F(fourierImageTests, applyInverseTransformComputesIFTCorrectly) {
     FourierImage inverse_transform = image_1ch.applyInverseTransform();
-    FourierImage original_image = inverse_transform.applyInverseTransform();
 
     // test 1 channel image
     for(int i = 0; i < 4; i++) {
         for(int j = 0; j < 4; j++) {
             //check equality up to 1e-10
-            ASSERT_NEAR(original_image.getTransform()(i,j).real(), image_1ch.getTransform()(i,j).real(), 1e-10);
+            ASSERT_NEAR(image_1ch(0)(i,j), inverse_transform(0)(i,j), 1e-10);
         }
     }
 }

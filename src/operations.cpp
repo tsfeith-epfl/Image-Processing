@@ -241,16 +241,31 @@ Eigen::ArrayXcd dft(Eigen::ArrayXcd input, bool inverse){
     Eigen::ArrayXcd output = Eigen::ArrayXcd::Zero(N);
 
     complex<double> omega;
-    for (int k = 0; k < N; k++) {
-        for (int n = 0; n < N; n++) {
+    // frequency domain origin is at the center of the array
+    int k_min = -N/2;
+    int k_max = N/2 - 1;
+    int n_min = 0;
+    int n_max = N - 1;
+    if (inverse){
+        n_min = -N/2;
+        n_max = N/2 - 1;
+        k_min = 0;
+        k_max = N - 1;
+    }
+
+    for (int k = k_min; k <= k_max; k++) {
+        for (int n = n_min; n <= n_max; n++) {
             if (inverse) {
-                omega = std::exp(std::complex<double>(0, 2 * M_PI * (k - N/2)* n / N));
+                omega = exp(complex<double>(0, 2 * M_PI * (k*n)/ N));
             } else {
-                omega = std::exp(std::complex<double>(0, -2 * M_PI * (k - N/2) * n / N));
+                omega = exp(complex<double>(0, -2 * M_PI * (k*n) / N));
             }
-            output(k) += input(n) * omega;
+            output(k - k_min) += input(n-n_min) * omega;
         }
     }
+
+
+
     if (inverse) {
         output /= N;
     }
