@@ -6,6 +6,7 @@
 #include "Denoiser.hpp"
 #include "Histogram.hpp"
 #include "ContourExtractor.hpp"
+#include "FourierImage.hpp"
 #include "parameters.hpp"
 #include <exception>
 
@@ -44,7 +45,7 @@ int main(int argc, char **argv) {
         string arg = argv[i];
         if (arg == "--mode") {
             if (strcmp(argv[i + 1], "denoise") == 0 || strcmp(argv[i + 1], "contour") == 0 ||
-                strcmp(argv[i + 1], "histogram") == 0) {
+                strcmp(argv[i + 1], "histogram") == 0 || strcmp(argv[i + 1], "fourier") == 0) {
                 mode = argv[i + 1];
                 mode_given = true;
             } else {
@@ -146,6 +147,58 @@ int main(int argc, char **argv) {
             Image contour_image = contour_extractor.extractContours(image, true);
             contour_image.save(output_name, true);
             cout << "Contour extraction complete." << endl;
+        }
+        catch (exception &e) {
+            cerr << "Error: " << e.what() << endl;
+            return 1;
+        }
+    }
+
+    if (mode == "fourier") {
+        // check if filter type is valid
+        if (FILTER_TYPE != "band" && FILTER_TYPE != "high" && FILTER_TYPE != "low") {
+            cerr <<"Invalid filter type: " + FILTER_TYPE << endl;
+            return 1;
+        }
+        //change output name by adding filter type
+        size_t dot_pos = output_name.rfind('.');
+        output_name.insert(dot_pos, "_" + FILTER_TYPE);
+
+        // show information about what is being done
+        cout << "Apply frequency domain filtering to image: " << input_name << endl;
+        cout << "Parameters used are:" << endl;
+        cout << "\tShow progress: " << SHOW_FOURIER_PROGRESS << endl;
+        cout << "\tShow Fourier Log Magnitude: " << SHOW_FOURIER_LOG_MAGNITUDE << endl;
+        cout << "\tLow cutoff: " << LOW_CUTOFF << endl;
+        cout << "\tHigh cutoff: " << HIGH_CUTOFF << endl;
+        cout << "\tFilter type: " << FILTER_TYPE << endl;
+        cout << "\tOutput file: " << output_name << endl;
+
+        try {
+            FourierImage fourier_image(input_name);
+            cout << "Applying Fourier Transform..." << endl;
+            fourier_image.applyTransform(SHOW_FOURIER_PROGRESS);
+
+            if (SHOW_FOURIER_LOG_MAGNITUDE) {
+                Image(normalize(fourier_image.getMagnitude(true))).show("Magnitude (log) - Original");
+            }
+
+            if (FILTER_TYPE == "band") {
+                fourier_image.applyBandPassFilter(LOW_CUTOFF, HIGH_CUTOFF);
+            } else if (FILTER_TYPE == "high") {
+                fourier_image.applyHighPassFilter(HIGH_CUTOFF);
+            } else if (FILTER_TYPE == "low") {
+                fourier_image.applyLowPassFilter(LOW_CUTOFF);
+            }
+
+            if (SHOW_FOURIER_LOG_MAGNITUDE) {
+                Image(normalize(fourier_image.getMagnitude(true))).show("Magnitude (log) - Filtered");
+            }
+            cout << "Applying Inverse Fourier Transform..." << endl;
+            FourierImage filtered = fourier_image.applyInverseTransform(SHOW_FOURIER_PROGRESS);
+            filtered.show("Filtered Image");
+            filtered.save(output_name, true);
+
         }
         catch (exception &e) {
             cerr << "Error: " << e.what() << endl;
