@@ -51,5 +51,6 @@ doxygen_add_docs(Doxyfile.in
 add_subdirectory(googletest)
 add_executable(test_suite test/histogramTests.cpp test/gradientTests.cpp test/convolutionsTests.cpp test/imageTests.cpp test/denoiserTests.cpp src/operations.hpp src/Image.hpp src/Denoiser.cpp test/contourExtractorTests.cpp src/ContourExtractor.cpp test/gradientTests.cpp src/Histogram.cpp src/FourierImage.cpp src/FourierImage.hpp test/fourierImageTests.cpp)
 target_link_libraries(test_suite gtest_main gtest ${OpenCV_LIBS})
+target_compile_options(test_suite PRIVATE ${_CXX_FLAGS})
 
 add_custom_target(test ./test_suite DEPENDS test_suite)
