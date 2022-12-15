@@ -150,6 +150,10 @@ provided below:
 - DFT operator
   - ????
 
+The tests implemented on release (16/12/2022) get a line coverage of ~90%. While coverage is just a metric, and it 
+shouldn't be the only metric used to evaluate the quality of the tests, it is a good indicator of the quality of the
+tests.
+
 For a more detailed description of the tests, please refer to the files in the `tests` folder. The test names should
 be self-explanatory.
 
