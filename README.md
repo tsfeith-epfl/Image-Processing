@@ -1,6 +1,6 @@
 # Image-Processing
-Repository for the final project of Programming Concepts in Scientific Computing (MATH-458), by Tomás Feith and André 
-Charneca.
+Repository for the final project of Programming Concepts in Scientific Computing (MATH-458), by Tomás Feith (342553) and André
+Charneca (338621), for the MSc in Computational Science and Engineering at EPFL.
 
 ## Description
 This project aims to implement a set of image processing algorithms, specifically image denoising, contour detection,
