@@ -209,3 +209,6 @@ int main(int argc, char **argv) {
 
     return 0;
 }
+
+// Q: I want to remove andre.cpp from git
+// A: git rm --cached andre.cpp

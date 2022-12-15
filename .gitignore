@@ -49,3 +49,8 @@ documentation/*
 !documentation/.gitkeep
 
 src/location.hpp
+
+# remove mac
+.DS_Store
+
+**/.DS_Store
