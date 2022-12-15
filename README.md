@@ -171,7 +171,7 @@ shouldn't be the only metric used to evaluate the quality of the tests, it is a 
 For a more detailed description of the tests, please refer to the files in the `tests` folder. The test names should
 be self-explanatory.
 
-## TODO
+## TO DO
 There are a few functionalities that we would have liked to implement but there was not enough time. These are:
 - [ ] Allow for the generation of histograms for each channel, not just the intensity
 - [ ] Allow batch processing of images, instead of just one at a time
@@ -179,3 +179,4 @@ There are a few functionalities that we would have liked to implement but there 
 - [ ] Fix histograms of PNG images with transparency. Right now, it omits the alpha channel, meaning that the pixels
 take the value of the first three channels. The most affected mode by this is the histogram.
 - [ ] Switch the DFT algorithm to use FFT (faster)
+- [ ] Allow FT computation on each channel, instead of converting to grayscale image.
