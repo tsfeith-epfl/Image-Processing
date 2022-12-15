@@ -1,10 +1,10 @@
 # Image-Processing
-Repository for the final project of Programming Concepts in Scientific Computing (MATH-458), by Tomás Feith and André 
-Charneca.
+Repository for the final project of Programming Concepts in Scientific Computing (MATH-458), by Tomás Feith (342553) and André
+Charneca (338621), for the MSc in Computational Science and Engineering at EPFL.
 
 ## Description
 This project aims to implement a set of image processing algorithms, specifically image denoising, contour detection,
-generation of its intensity histogram and computation of its FFT. The algorithms are implemented in C++, and the 
+generation of its intensity histogram and frequency filtering with Fourier Transforms. The algorithms are implemented in C++, and the 
 documentation is generated using Doxygen.
 This project contains an extensive suite of unit tests, which are run using the Google Test framework.
 
@@ -50,19 +50,23 @@ The parameters for the program are stored in a `.hpp` file called `parameters.hp
 parameters of the program without having to pass them as arguments. Each mode of operation has different
 parameters, and they are described below.
 - Denoising
-  - sigma: standard deviation of the Gaussian kernel to apply to the image. Set to 0 to use mean filtering. Default: 1.0
-  - kernel_size: size of the kernel to apply to the image. Default: 3
+  - sigma: standard deviation of the Gaussian kernel to apply to the image. Set to 0 to use mean filtering.
+  - kernel_size: size of the kernel to apply to the image.
 - Contour Detection
-  - threshold: threshold to use for the contour detection. Default: 0.3
-  - sigma: standard deviation of the Gaussian kernel to apply to the image. Set to 0 to use mean filtering. Default: 2.0
-  - kernel_size: size of the kernel to apply to the image. Default: 5
+  - threshold: threshold to use for the contour detection.
+  - sigma: standard deviation of the Gaussian kernel to apply to the image. Set to 0 to use mean filtering.
+  - kernel_size: size of the kernel to apply to the image.
 - Intensity Histogram
-  - bins: number of bins to use in the histogram. Default: 500
-  - max range: maximum value to use in the histogram. Must be between in (`min_range`, 1.]. Default: 1.0
-  - min range: minimum value to use in the histogram. Must be between in [0., `max_range`). Default: 0.0
-  - log: whether to use a logarithmic scale for the histogram. Default: false
-- Fourier Transform
-  - ???
+  - bins: number of bins to use in the histogram.
+  - max range: maximum value to use in the histogram. Must be between in (`min_range`, 1.].
+  - min range: minimum value to use in the histogram. Must be between in [0., `max_range`).
+  - log: whether to use a logarithmic scale for the histogram.
+- Fourier Filtering
+  - show_fourier_progress: whether to show progress in Fourier Transform computations.
+  - show_fourier_log_magnitude: whether to show log magnitude of Fourier Transforms.
+  - low_cutoff: frequency cutoff for low pass filter. Its the radius of the kept frequency circle, relative to the smallest image dimension.
+  - high_cutoff: frequency cutoff for high pass filter. Its the radius of the zero frequency circle, relative to the smallest image dimension.
+  - filter_type: chooses the type of filter to be applied. If it's "band", it will use low_cutoff and high_cutoff parameters as the arguments.
 
 ### Running the program
 To run the program, simply run the executable created in the `build` folder. Even though the program reads the parameters
@@ -71,7 +75,7 @@ from the parameters.hpp` file, there are still some parameters that must be pass
   - denoise: denoises the image
   - contour: detects the contours of the image
   - histogram: computes the intensity histogram of the image
-  - dft: compute the fourier transform of the image, and apply one of the possible operations on the frequency domain
+  - fourier: compute the fourier transform of the image, and apply one of the possible operations on the frequency domain
 - input: name of the input image (including the extension). REQUIRED
   - It can be given as an absolute path, or as a relative path to the `images` folder. 
 - output: name of the output image (including the extension). OPTIONAL (default: same as input image)
@@ -88,18 +92,26 @@ After running the program, the output will be placed in one of two places:
 
 ## Features
 This project contains the following features:
+- The Image class
+  - Load gray scale or color images from path.
+  - Create images from Eigen arrays.
+  - Convert color image to gray scale using [colorimetric conversion](https://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale).
+  - Display images on screen.
+  - Save image to output file.
 - Image denoising using Gaussian filtering
-  - Allow mean filtering as a special case of Gaussian filtering by setting the standard deviation to 0
-  - Allow the user to choose the size of the kernel and the standard deviation of the Gaussian kernel
+  - Mean filtering as a special case of Gaussian filtering by setting the standard deviation to 0
+  - Choose the size of the kernel and the standard deviation of the Gaussian kernel
 - Contour detection using thresholded Sobel filtering
-  - Allow the user to choose the threshold to use for the contour detection
-  - Allow the user to choose the size of the kernel and the standard deviation of the Gaussian kernel
+  - Choose the threshold to use for the contour detection
+  - Choose the size of the kernel and the standard deviation of the Gaussian kernel
 - Intensity histogram computation
-  - Allow the user to choose the number of bins to use in the histogram
-  - Allow the user to choose the range of values to use in the histogram
-  - Allow the user to choose whether to use a logarithmic scale for the histogram
-- DFT computation
-  - ????
+  - Choose the number of bins to use in the histogram
+  - Choose range of values to use in the histogram
+  - Choose whether to use a logarithmic scale for the histogram
+- Fourier Filtering
+  - Computation of Fourier Transform and Inverse Fourier Transform of image. 
+  - Computation of Magnitude, Phase, Real and Imaginary parts of the Fourier Transform.
+  - Choose filter mode (low, high or band pass) and frequency cutoffs.
 - Other general features
   - Allow the user to provide the arguments in any order
   - Allow the user to provide the input image as an absolute path, or as a relative path to the `images` folder
@@ -122,7 +134,7 @@ provided below:
   - Getters and setters work as expected
   - Overloaded operators work as expected
   - Channel reduction (RGB to grayscale) works as expected
-- Convolution operators
+- Convolutional operators
   - Gives output with same size as input
   - Unit kernel gives same output as input
   - Throws expection on invalid parameters
@@ -133,31 +145,33 @@ provided below:
   - Gradient returns correct values
   - Gradient magnitude returns correct values
   - Gradient direction only tested for exceptions
-- Denoising operator
+- Denoiser object
   - Constructor throws exception on invalid parameters
   - Getters and setters work as expected
-- Intensity histogram operator
+- Intensity histogram object
   - Constructor throws exception on invalid parameters
   - Getters and setters work as expected
   - Histogram works for RGB and Grayscale images
   - Histogram is computed correctly
   - Histogram is plotted without exceptions
-- Contour extractor operator
+- Contour extractor object
   - Constructor throws exception on invalid parameters
   - Getters and setters work as expected
   - Turns RGB image to grayscale
   - Returns binary image
-- DFT operator
-  - ????
+- Fourier Image object
+  - Correct computation of FT and IFT
+  - Getters and setters work as expected
+  - Frequency filters work as expected
+
 
 The tests implemented on release (16/12/2022) get a line coverage of ~90%. While coverage is just a metric, and it 
-shouldn't be the only metric used to evaluate the quality of the tests, it is a good indicator of the quality of the
-tests.
+shouldn't be the only metric used to evaluate the quality of the tests, it is a good indicator.
 
 For a more detailed description of the tests, please refer to the files in the `tests` folder. The test names should
 be self-explanatory.
 
-## TODO
+## TO DO
 There are a few functionalities that we would have liked to implement but there was not enough time. These are:
 - [ ] Allow for the generation of histograms for each channel, not just the intensity
 - [ ] Allow batch processing of images, instead of just one at a time
@@ -165,3 +179,4 @@ There are a few functionalities that we would have liked to implement but there 
 - [ ] Fix histograms of PNG images with transparency. Right now, it omits the alpha channel, meaning that the pixels
 take the value of the first three channels. The most affected mode by this is the histogram.
 - [ ] Switch the DFT algorithm to use FFT (faster)
+- [ ] Allow FT computation on each channel, instead of converting to grayscale image.
