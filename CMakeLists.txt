@@ -32,7 +32,7 @@ endif()
 
 set(_CXX_FLAGS "-O3")
 
-add_executable(main main.cpp src/operations.cpp src/Image.cpp src/Denoiser.cpp parameters.hpp src/ContourExtractor.cpp src/Histogram.cpp src/FourierImage.cpp src/FourierImage.hpp)
+add_executable(main main.cpp src/operations.cpp src/Image.cpp src/Denoiser.cpp parameters.hpp src/ContourExtractor.cpp src/Histogram.cpp src/FourierImage.cpp)
 target_link_libraries(main ${OpenCV_LIBS})
 target_compile_options(main PRIVATE ${_CXX_FLAGS})
 
@@ -49,7 +49,7 @@ doxygen_add_docs(Doxyfile.in
 
 # build test suite
 add_subdirectory(googletest)
-add_executable(test_suite test/histogramTests.cpp test/gradientTests.cpp test/convolutionsTests.cpp test/imageTests.cpp test/denoiserTests.cpp src/operations.hpp src/Image.hpp src/Denoiser.cpp test/contourExtractorTests.cpp src/ContourExtractor.cpp test/gradientTests.cpp src/Histogram.cpp src/FourierImage.cpp src/FourierImage.hpp test/fourierImageTests.cpp)
+add_executable(test_suite test/histogramTests.cpp test/gradientTests.cpp test/convolutionsTests.cpp test/imageTests.cpp test/denoiserTests.cpp src/Denoiser.cpp test/contourExtractorTests.cpp src/ContourExtractor.cpp test/gradientTests.cpp src/Histogram.cpp src/FourierImage.cpp test/fourierImageTests.cpp)
 target_link_libraries(test_suite gtest_main gtest ${OpenCV_LIBS})
 target_compile_options(test_suite PRIVATE ${_CXX_FLAGS})
 
