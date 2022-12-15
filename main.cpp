@@ -7,6 +7,7 @@
 #include "Histogram.hpp"
 #include "ContourExtractor.hpp"
 #include "parameters.hpp"
+#include <exception>
 
 using namespace std;
 
@@ -33,7 +34,7 @@ int main(int argc, char **argv) {
     }
 
     if (argc % 2 == 0) {
-        cout << "Error: Invalid number of arguments. Run ./main for to see the help screen" << endl;
+        cerr << "Error: Invalid number of arguments. Run ./main for to see the help screen" << endl;
         return 1;
     }
 
@@ -47,7 +48,7 @@ int main(int argc, char **argv) {
                 mode = argv[i + 1];
                 mode_given = true;
             } else {
-                cout << "Error: Invalid mode. Run ./main for to see the help screen" << endl;
+                cerr << "Error: Invalid mode. Run ./main for to see the help screen" << endl;
                 return 1;
             }
         } else if (arg == "--input") {
@@ -56,17 +57,17 @@ int main(int argc, char **argv) {
         } else if (arg == "--output") {
             output_name = argv[i + 1];
         } else {
-            cout << "Error: Invalid argument: " << arg << endl;
+            cerr << "Error: Invalid argument: " << arg << endl;
             return 1;
         }
     }
 
     if (!input_given) {
-        cout << "Error: No input file specified. Run ./main for to see the help screen" << endl;
+        cerr << "Error: No input file specified. Run ./main for to see the help screen" << endl;
         return 1;
     }
     if (!mode_given) {
-        cout << "Warning: No mode specified. Run ./main for to see the help screen" << endl;
+        cerr << "Warning: No mode specified. Run ./main for to see the help screen" << endl;
     }
 
     Image image(input_name);
@@ -97,10 +98,16 @@ int main(int argc, char **argv) {
         cout << "\tKernel size: " << DENOISER_KERNEL_SIZE << endl;
         cout << "\tSigma: " << DENOISER_SIGMA << endl;
         cout << "\tOutput file: " << output_name << endl;
-
-        Denoiser denoiser(DENOISER_KERNEL_SIZE, DENOISER_SIGMA);
-        Image denoised_image = denoiser.denoise(image, true);
-        denoised_image.save(output_name, true);
+        try {
+            Denoiser denoiser(DENOISER_KERNEL_SIZE, DENOISER_SIGMA);
+            Image denoised_image = denoiser.denoise(image, true);
+            denoised_image.save(output_name, true);
+            cout << "Denoising complete." << endl;
+        }
+        catch (exception &e) {
+            cerr << "Error: " << e.what() << endl;
+            return 1;
+        }
     }
 
     if (mode == "histogram") {
@@ -113,8 +120,15 @@ int main(int argc, char **argv) {
         cout << "\tLog scale: " << LOG_SCALE << endl;
         cout << "\tOutput file: " << output_name << endl;
 
-        Histogram histogram(HISTOGRAM_BINS, HISTOGRAM_MIN, HISTOGRAM_MAX, LOG_SCALE);
-        histogram.getHistogram(image, true, output_name);
+        try {
+            Histogram histogram(HISTOGRAM_BINS, HISTOGRAM_MIN, HISTOGRAM_MAX, LOG_SCALE);
+            histogram.getHistogram(image, true, output_name);
+            cout << "Histogram complete." << endl;
+        }
+        catch (exception &e) {
+            cerr << "Error: " << e.what() << endl;
+            return 1;
+        }
     }
 
     if (mode == "contour") {
@@ -126,10 +140,17 @@ int main(int argc, char **argv) {
         cout << "\tThreshold: " << CONTOUR_EXTRACTOR_THRESHOLD << endl;
         cout << "\tOutput file: " << output_name << endl;
 
-        ContourExtractor contour_extractor(CONTOUR_EXTRACTOR_THRESHOLD, CONTOUR_EXTRACTOR_KERNEL_SIZE,
-                                           CONTOUR_EXTRACTOR_SIGMA);
-        Image contour_image = contour_extractor.extractContours(image, true);
-        contour_image.save(output_name, true);
+        try {
+            ContourExtractor contour_extractor(CONTOUR_EXTRACTOR_THRESHOLD, CONTOUR_EXTRACTOR_KERNEL_SIZE,
+                                               CONTOUR_EXTRACTOR_SIGMA);
+            Image contour_image = contour_extractor.extractContours(image, true);
+            contour_image.save(output_name, true);
+            cout << "Contour extraction complete." << endl;
+        }
+        catch (exception &e) {
+            cerr << "Error: " << e.what() << endl;
+            return 1;
+        }
     }
 
     return 0;
