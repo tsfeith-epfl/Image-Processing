@@ -32,10 +32,14 @@ protected:
                 (-0.5333333333+0.i),(-0.5333333333-0.5333333333i),(8.+0.i),(-0.5333333333+0.5333333333i),
                 (-0.+0.i),(-0.+0.i),(-2.1333333333+2.1333333333i),0.i;
 
+        // create a Fourier Image without the transformation applied
+        image_1ch_no_transf = FourierImage(1, image_data);
+
     }
 
     FourierImage image_3ch;
     FourierImage image_1ch;
+    FourierImage image_1ch_no_transf;
     Eigen::ArrayXXcd expected_transf;
 };
 
@@ -74,6 +78,10 @@ TEST_F(fourierImageTests, applyInverseTransformComputesIFTCorrectly) {
             ASSERT_NEAR(original_image.getTransform()(i,j).real(), image_1ch.getTransform()(i,j).real(), 1e-10);
         }
     }
+}
+
+TEST_F(fourierImageTests, applyInverseTransformBeforeDirectTransformThrowsException) {
+    ASSERT_THROW(image_1ch_no_transf.applyInverseTransform(), std::runtime_error);
 }
 
 // Getters
@@ -184,14 +192,68 @@ TEST_F(fourierImageTests, setTransformInvalidSizeThrowsException) {
 
 // Filters
 TEST_F(fourierImageTests, applyLowPassBeforeTransformThrowsException) {
-    FourierImage image = FourierImage(1, Eigen::ArrayXXd::Zero(4, 4));
-    ASSERT_THROW(image.applyLowPassFilter(0.5), std::runtime_error);
+    ASSERT_THROW(image_1ch_no_transf.applyLowPassFilter(1), std::runtime_error);
+}
+
+TEST_F(fourierImageTests, applyHighPassBeforeTransformThrowsException) {
+    ASSERT_THROW(image_1ch_no_transf.applyHighPassFilter(1), std::runtime_error);
+}
+
+TEST_F(fourierImageTests, applyBandPassBeforeTransformThrowsException) {
+    ASSERT_THROW(image_1ch_no_transf.applyBandPassFilter(1, 2), std::runtime_error);
 }
 
 TEST_F(fourierImageTests, applyLowPassInvalidCutOffThrowsException) {
     ASSERT_THROW(image_1ch.applyLowPassFilter(-1), std::invalid_argument);
 }
 
+TEST_F(fourierImageTests, applyHighPassInvalidCutOffThrowsException) {
+    ASSERT_THROW(image_1ch.applyHighPassFilter(-1), std::invalid_argument);
+}
+
+TEST_F(fourierImageTests, applyBandPassNegativeLowerCutOffThrowsException) {
+    ASSERT_THROW(image_1ch.applyBandPassFilter(-1, 1), std::invalid_argument);
+}
+
+TEST_F(fourierImageTests, applyBandPassNegativeUpperCutOffThrowsException) {
+    ASSERT_THROW(image_1ch.applyBandPassFilter(1, -1), std::invalid_argument);
+}
+
+TEST_F(fourierImageTests, applyBandPassLowerCutOffGreaterThanUpperThrowsException) {
+    ASSERT_THROW(image_1ch.applyBandPassFilter(2, 1), std::invalid_argument);
+}
+
+TEST_F(fourierImageTests, lowPassFilterWithZeroCutoffReturnsZeroImage) {
+    image_1ch.applyLowPassFilter(0);
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            ASSERT_NEAR(image_1ch.getTransform()(i, j).real(), 0, 1e-10);
+            ASSERT_NEAR(image_1ch.getTransform()(i, j).imag(), 0, 1e-10);
+        }
+    }
+}
+
+TEST_F(fourierImageTests, highPassFilterWithZeroCutoffReturnsOriginalImage) {
+    image_1ch.applyHighPassFilter(0);
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            ASSERT_NEAR(image_1ch.getTransform()(i, j).real(), expected_transf(i, j).real(), 1e-10);
+            ASSERT_NEAR(image_1ch.getTransform()(i, j).imag(), expected_transf(i, j).imag(), 1e-10);
+        }
+    }
+}
+
+TEST_F(fourierImageTests, bandPassFilterWithSameCutoffsReturnsZeroImage) {
+    image_1ch.applyBandPassFilter(1, 1);
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            ASSERT_NEAR(image_1ch.getTransform()(i, j).real(), 0, 1e-10);
+            ASSERT_NEAR(image_1ch.getTransform()(i, j).imag(), 0, 1e-10);
+        }
+    }
+}
+
+/*
 TEST_F(fourierImageTests, applyLowPassFilterReturnsCorrectTransform) {
     Eigen::ArrayXXcd expected_transf_filtered = Eigen::ArrayXXcd::Zero(4, 4);
     expected_transf_filtered(1,1) = expected_transf(1,1);
@@ -208,8 +270,4 @@ TEST_F(fourierImageTests, applyLowPassFilterReturnsCorrectTransform) {
 
     // complete this
 }
-
-
-
-
-
+*/

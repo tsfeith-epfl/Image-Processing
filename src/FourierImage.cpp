@@ -18,8 +18,7 @@ void FourierImage::applyTransform(bool show_progress) {
     if (this->getChannels() > 1) {
         std::cerr << "FourierImage::applyTransform: Converting to grayscale..." << endl;
         input = this->reduceChannels().getData(0).cast<std::complex<double>>();
-    }
-    else {
+    } else {
         input = this->getData(0).cast<std::complex<double>>();
     }
     this->data_transf = dft2(input, false, show_progress);
@@ -74,7 +73,7 @@ Eigen::ArrayXXd FourierImage::getMagnitude(bool log) const {
 
     Eigen::ArrayXXd magnitude = this->data_transf.abs();
     if (log) {
-        magnitude = (magnitude+1e-8).log();
+        magnitude = (magnitude + 1e-8).log();
     }
     return magnitude;
 }
@@ -133,7 +132,7 @@ Eigen::ArrayXXd FourierImage::getImaginary() const {
  * @param transform The new transform attribute.
  * @return
  */
-void FourierImage::setTransform(const Eigen::ArrayXXcd& transform){
+void FourierImage::setTransform(const Eigen::ArrayXXcd &transform) {
     // check if transform is valid
     if (transform.rows() != this->getHeight() || transform.cols() != this->getWidth()) {
         throw std::runtime_error("Invalid transform size.");
@@ -156,7 +155,6 @@ void FourierImage::applyLowPassFilter(double cutoff) {
     // check if transform has been applied
     if (this->data_transf.size() == 0) {
         throw std::runtime_error("No transform has been applied to the image.");
-        return;
     }
 
     // check if cutoff is valid
@@ -165,15 +163,15 @@ void FourierImage::applyLowPassFilter(double cutoff) {
     }
 
     // sizes
-    int rows = this->data_transf.rows();
-    int cols = this->data_transf.cols();
+    int rows = (int) this->data_transf.rows();
+    int cols = (int) this->data_transf.cols();
 
     // apply filter, assuming the frequency domain is centered in the image
     Eigen::ArrayXXcd output = this->data_transf;
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-            double distance = sqrt(pow(i-(rows-1)/2, 2) + pow(j-(cols-1)/2, 2));
-            if (distance > cutoff*min(rows, cols)/2) {
+            double distance = sqrt(pow(i - (rows - 1) / 2, 2) + pow(j - (cols - 1) / 2, 2));
+            if (distance >= cutoff * min(rows, cols) / 2) {
                 output(i, j) = 0;
             }
         }
@@ -189,11 +187,10 @@ void FourierImage::applyLowPassFilter(double cutoff) {
  * relative to the minimum dimension of the image.
  * @return
  */
-void FourierImage::applyHighPassFilter(double cutoff){
+void FourierImage::applyHighPassFilter(double cutoff) {
     // check if transform has been applied
     if (this->data_transf.size() == 0) {
-        std::cerr << "FourierImage::applyHighPassFilter: No transform has been applied to the image." << endl;
-        return;
+        throw std::runtime_error("No transform has been applied to the image.");
     }
 
     // check if cutoff is valid
@@ -202,15 +199,15 @@ void FourierImage::applyHighPassFilter(double cutoff){
     }
 
     // sizes
-    int rows = this->data_transf.rows();
-    int cols = this->data_transf.cols();
+    int rows = (int) this->data_transf.rows();
+    int cols = (int) this->data_transf.cols();
 
     // apply filter, assuming the frequency domain is centered in the image
     Eigen::ArrayXXcd output = this->data_transf;
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
-            double distance = sqrt(pow(i-(rows-1)/2, 2) + pow(j-(cols-1)/2, 2));
-            if (distance < cutoff*min(rows, cols)/2) {
+            double distance = sqrt(pow(i - (rows - 1) / 2, 2) + pow(j - (cols - 1) / 2, 2));
+            if (distance <= cutoff * min(rows, cols) / 2) {
                 output(i, j) = 0;
             }
         }
@@ -228,14 +225,17 @@ void FourierImage::applyHighPassFilter(double cutoff){
  * relative to the minimum dimension of the image.
  * @return
  */
-void FourierImage::applyBandPassFilter(double cutoff1, double cutoff2){
+void FourierImage::applyBandPassFilter(double cutoff1, double cutoff2) {
     // check if transform has been applied
     if (this->data_transf.size() == 0) {
         throw std::runtime_error("No transform has been applied to the image.");
     }
     // check if cutoffs are valid
-    if (cutoff1 > cutoff2 || cutoff1 < 0 || cutoff2 < 0) {
-        throw std::invalid_argument("Invalid cutoffs.");
+    if (cutoff1 > cutoff2) {
+        throw std::invalid_argument("Lower cutoff must be smaller than upper cutoff.");
+    }
+    if (cutoff1 < 0 || cutoff2 < 0) {
+        throw std::invalid_argument("Cutoffs must be positive.");
     }
     // apply high pass filter
     this->applyHighPassFilter(cutoff1);
