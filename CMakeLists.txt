@@ -39,6 +39,8 @@ target_compile_options(main PRIVATE ${_CXX_FLAGS})
 # REMOVE BEFORE SUBMISSION
 add_executable(andre andre.cpp src/operations.cpp src/Image.cpp src/Denoiser.cpp parameters.hpp src/ContourExtractor.cpp src/Histogram.cpp src/FourierImage.cpp src/FourierImage.hpp)
 target_link_libraries(andre ${OpenCV_LIBS})
+target_compile_options(andre PRIVATE ${_CXX_FLAGS})
+
 
 # build documentation using doxygen
 find_package(Doxygen
