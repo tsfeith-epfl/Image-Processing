@@ -197,6 +197,7 @@ void Histogram::getHistogram(const Image &image, bool show, const string &output
     fprintf(gnuplotPipe, "set style fill solid 1.0 border -1\n");
     fprintf(gnuplotPipe, "set style data histograms\n");
     fprintf(gnuplotPipe, "set xrange [%d:%d]\n", 0, this->bins);
+    fprintf(gnuplotPipe, "set boxwidth 3 relative\n");
     fprintf(gnuplotPipe, "set xlabel 'Intensity'\n");
     fprintf(gnuplotPipe, "set ylabel 'Frequency'\n");
     fprintf(gnuplotPipe, "set title 'Intensity Histogram'\n");
