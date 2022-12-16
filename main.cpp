@@ -200,7 +200,7 @@ int main(int argc, char **argv) {
             }
 
             filtered.save(output_name, true);
-
+            cout << "Frequency domain filtering complete." << endl;
         }
         catch (exception &e) {
             cerr << "Error: " << e.what() << endl;
