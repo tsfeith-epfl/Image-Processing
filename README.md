@@ -5,7 +5,7 @@ Charneca (338621), for the MSc in Computational Science and Engineering at EPFL.
 ## Description
 This project aims to implement a set of image processing algorithms, specifically image denoising, contour detection,
 generation of its intensity histogram and frequency filtering with Fourier Transforms. The algorithms are implemented in C++, and the 
-documentation is generated using Doxygen.
+documentation is generated using Doxygen. This project was tested on Linux and MacOS.
 This project contains an extensive suite of unit tests, which are run using the Google Test framework.
 
 ## Setup
@@ -63,7 +63,7 @@ parameters, and they are described below.
   - log: whether to use a logarithmic scale for the histogram.
 - Fourier Filtering
   - show_fourier_progress: whether to show progress in Fourier Transform computations.
-  - show_fourier_log_magnitude: whether to show log magnitude of Fourier Transforms.
+  - show_fourier_transform_images: whether to show log magnitude and phase of the FT's, along wth the filtered image.
   - low_cutoff: frequency cutoff for low pass filter. Its the radius of the kept frequency circle, relative to the smallest image dimension.
   - high_cutoff: frequency cutoff for high pass filter. Its the radius of the zero frequency circle, relative to the smallest image dimension.
   - filter_type: chooses the type of filter to be applied. If it's "band", it will use low_cutoff and high_cutoff parameters as the arguments.
@@ -95,6 +95,7 @@ This project contains the following features:
 - The Image class
   - Load gray scale or color images from path.
   - Create images from Eigen arrays.
+  - Apply convolutions on images.
   - Convert color image to gray scale using [colorimetric conversion](https://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale).
   - Display images on screen.
   - Save image to output file.
