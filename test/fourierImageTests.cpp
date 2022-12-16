@@ -65,6 +65,21 @@ TEST_F(fourierImageTests, copyConstructorWorks) {
     }
 }
 
+TEST_F(fourierImageTests, constructorFromImageWorks) {
+    Eigen::ArrayXXd image_data = Eigen::ArrayXXd::Zero(4,4);
+    Image image(1, image_data);
+    FourierImage image_1ch(image);
+    ASSERT_EQ(image_1ch.getChannels(), image.getChannels());
+    ASSERT_EQ(image_1ch.getWidth(), image.getWidth());
+    ASSERT_EQ(image_1ch.getHeight(), image.getHeight());
+
+    for (int j = 0; j < image_1ch.getWidth(); j++) {
+        for (int k = 0; k < image_1ch.getHeight(); k++) {
+            ASSERT_EQ(image_1ch.getData(0)(j, k), image.getData(0)(j, k));
+        }
+    }
+}
+
 TEST_F(fourierImageTests, applyTransformComputesFTCorrectly) {
  // test 3 channel image
     for(int i = 0; i < 4; i++) {
