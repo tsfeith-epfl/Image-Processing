@@ -22,6 +22,10 @@ using namespace std;
 
 class Denoiser {
 private:
+    /**
+     * @var kernel
+     * Convolutional kernel to apply to the image for denoising..
+     */
     Eigen::ArrayXXd kernel;
 
 public:

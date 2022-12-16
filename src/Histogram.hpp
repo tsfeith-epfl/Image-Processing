@@ -20,9 +20,25 @@
  */
 class Histogram {
 private:
+    /**
+     * @var bins
+     * Number of bins in the histogram.
+     */
     int bins;
+    /**
+     * @var min_range
+     * Minimum value of the histogram range.
+     */
     double min_range;
+    /**
+     * @var max_range
+     * Maximum value of the histogram range.
+     */
     double max_range;
+    /**
+     * @var log_scale
+     * Boolean to choose if the y-scale is logarithmic or not.
+     */
     bool log;
 
 public:

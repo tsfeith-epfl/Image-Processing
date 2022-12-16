@@ -18,11 +18,35 @@ using namespace std;
  */
 class Image {
 private:
+    /**
+     * @var width
+     * Width of the image.
+     */
     int width;
+    /**
+     * @var height
+     * Height of the image.
+     */
     int height;
+    /**
+     * @var channels
+     * Number of channels of the image.
+     */
     int channels;
+    /**
+     * @var data
+     * Vector of Eigen matrices containing the image data, where each matrix is a channel.
+     */
     vector<Eigen::ArrayXXd> data;
+    /**
+     * @var absolute_path
+     * If the image is loaded from a file, this variable states whether the path provided was absolute or relative.
+     */
     bool absolute_path = false;
+    /**
+     * @var path
+     * Path to the image file.
+     */
     string path;
 
 public:
