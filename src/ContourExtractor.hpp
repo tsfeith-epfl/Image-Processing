@@ -25,7 +25,10 @@ using namespace std;
  */
 class ContourExtractor {
 private:
+    /*!The threshold value for the gradient magnitude.*/
     double threshold;
+
+    /*!The Denoiser object used to reduce high frequencies before computing the gradient.*/
     Denoiser denoiser;
 
 public:

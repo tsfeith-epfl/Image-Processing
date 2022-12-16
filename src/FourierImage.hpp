@@ -17,6 +17,7 @@
  */
 class FourierImage : public Image {
 private:
+    /*! Contains the Fourier Transform of the data.*/
     Eigen::ArrayXXcd data_transf;
 
 public:
