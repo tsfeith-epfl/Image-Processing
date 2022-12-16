@@ -40,6 +40,9 @@ public:
     void applyHighPassFilter(double cutoff);
     void applyBandPassFilter(double cutoff1, double cutoff2);
 
+    // override show method
+    void show(const string& window_name = "window");
+    void showImage(const string& window_name = "window");
 
 };
 

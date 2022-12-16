@@ -243,3 +243,62 @@ void FourierImage::applyBandPassFilter(double cutoff1, double cutoff2) {
     // apply low pass filter
     this->applyLowPassFilter(cutoff2);
 }
+
+/*!
+ * *@brief Method to show Fourier Image in a window.
+ * @details This overrides Image::show() method. If the Fourier Transform has been computed,
+ * it shows the grayscale image, the log magnitude of the FT and the phase of the FT in the same window.
+ * Otherwise, it just shows the image.
+ * @param window_name Name of the window
+ * @return
+ */
+void FourierImage::show(const string& window_name){
+    // check if FT has been computed
+    if (this->data_transf.size() == 0) {
+        // show image
+        this->showImage(window_name);
+    } else {
+        cv::Mat image, log_mag_img, phase_img;
+        Eigen::ArrayXXd log_mag = this->getMagnitude(true);
+        Eigen::ArrayXXd phase = this->getPhase();
+
+        image = Image(3,this->getData(0)).toCvMat();
+        log_mag_img = Image(3,normalize(log_mag)).toCvMat();
+        phase_img = Image(3, normalize(phase)).toCvMat();
+
+        cv::namedWindow(window_name + " (Image)", cv::WINDOW_NORMAL);
+        cv::namedWindow(window_name + " (FT Log Magnitude)", cv::WINDOW_NORMAL);
+        cv::namedWindow(window_name + " (FT Phase)", cv::WINDOW_NORMAL);
+
+        // resize windows to occupy a third of the screen
+        int screen_width = 1980;
+        int screen_height = 1080;
+
+        // move and resize windows
+        cv::moveWindow(window_name + " (Image)", 0, 0);
+        cv::moveWindow(window_name + " (FT Log Magnitude)", screen_width/3, 0);
+        cv::moveWindow(window_name + " (FT Phase)", 2*screen_width/3, 0);
+
+        cv::imshow(window_name + " (Image)", image);
+        cv::imshow(window_name + " (FT Log Magnitude)", log_mag_img);
+        cv::imshow(window_name + " (FT Phase)", phase_img);
+
+        cv::resizeWindow(window_name + " (Image)", screen_width / 3, screen_height / 3);
+        cv::resizeWindow(window_name + " (FT Log Magnitude)", screen_width / 3, screen_height / 3);
+        cv::resizeWindow(window_name + " (FT Phase)", screen_width / 3, screen_height / 3);
+
+        // wait for key press
+        cv::waitKey(0);
+
+    }
+}
+
+/*!
+ * @brief Method to show only the Image, without the FT.
+ * @details Calls Image::show() method to show only the image.
+ * @param window_name
+ * @return
+ */
+void FourierImage::showImage(const string& window_name) {
+    Image::show(window_name);
+}
