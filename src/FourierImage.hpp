@@ -21,7 +21,7 @@ private:
 
 public:
     using Image::Image; // use constructor inheritance
-
+    explicit FourierImage(const Image& image) : Image(image){};
     void applyTransform(bool show_progress = false);
     FourierImage applyInverseTransform(bool show_progress = false);
 
