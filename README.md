@@ -43,6 +43,14 @@ This will create an executable called `main` in the `build` folder. To run it, s
 
 in the `build` folder. This command will show the help screen.
 
+### Generating documentation
+
+To generate the documentation, all that is needed is to run the following command in the root directory of the project:
+
+    doxygen Doxyfile.in
+
+This will populate the `documentation` folder. To view the documentation, open the `docs/html/index.html` file.
+
 ## Usage
 
 ### Parameters
