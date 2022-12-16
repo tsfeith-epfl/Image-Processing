@@ -63,7 +63,7 @@ parameters, and they are described below.
   - log: whether to use a logarithmic scale for the histogram.
 - Fourier Filtering
   - show_fourier_progress: whether to show progress in Fourier Transform computations.
-  - show_fourier_log_magnitude: whether to show log magnitude of Fourier Transforms.
+  - show_fourier_transform_images: whether to show log magnitude and phase of the FT's, along wth the filtered image.
   - low_cutoff: frequency cutoff for low pass filter. Its the radius of the kept frequency circle, relative to the smallest image dimension.
   - high_cutoff: frequency cutoff for high pass filter. Its the radius of the zero frequency circle, relative to the smallest image dimension.
   - filter_type: chooses the type of filter to be applied. If it's "band", it will use low_cutoff and high_cutoff parameters as the arguments.
