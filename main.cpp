@@ -168,7 +168,7 @@ int main(int argc, char **argv) {
         cout << "Apply frequency domain filtering to image: " << input_name << endl;
         cout << "Parameters used are:" << endl;
         cout << "\tShow progress: " << SHOW_FOURIER_PROGRESS << endl;
-        cout << "\tShow Fourier Log Magnitude: " << SHOW_FOURIER_LOG_MAGNITUDE << endl;
+        cout << "\tShow Fourier Transform Images: " << SHOW_FOURIER_TRANSFORM_IMAGES << endl;
         cout << "\tLow cutoff: " << LOW_CUTOFF << endl;
         cout << "\tHigh cutoff: " << HIGH_CUTOFF << endl;
         cout << "\tFilter type: " << FILTER_TYPE << endl;
@@ -188,18 +188,17 @@ int main(int argc, char **argv) {
                 fourier_image.applyLowPassFilter(LOW_CUTOFF);
             }
 
-
             cout << "Applying Inverse Fourier Transform..." << endl;
             FourierImage filtered = fourier_image.applyInverseTransform(SHOW_FOURIER_PROGRESS);
 
-            if (SHOW_FOURIER_LOG_MAGNITUDE) {
-                Image(normalize(original_fourier_image.getMagnitude(true))).show("Magnitude (log) - Original");
-                Image(normalize(filtered.getMagnitude(true))).show("Magnitude (log) - Filtered");
+            if (SHOW_FOURIER_TRANSFORM_IMAGES) {
+                filtered.show("Filtered Image");
+            }
+            else {
+                filtered.showImage("Filtered Image");
             }
 
-            filtered.show("Filtered Image");
             filtered.save(output_name, true);
-
         }
         catch (exception &e) {
             cerr << "Error: " << e.what() << endl;
@@ -209,6 +208,3 @@ int main(int argc, char **argv) {
 
     return 0;
 }
-
-// Q: I want to remove andre.cpp from git
-// A: git rm --cached andre.cpp
