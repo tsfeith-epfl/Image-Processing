@@ -5,7 +5,7 @@ Charneca (338621), for the MSc in Computational Science and Engineering at EPFL.
 ## Description
 This project aims to implement a set of image processing algorithms, specifically image denoising, contour detection,
 generation of its intensity histogram and frequency filtering with Fourier Transforms. The algorithms are implemented in C++, and the 
-documentation is generated using Doxygen.
+documentation is generated using Doxygen. This project was tested on Linux and MacOS.
 This project contains an extensive suite of unit tests, which are run using the Google Test framework.
 
 ## Setup
