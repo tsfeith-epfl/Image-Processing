@@ -43,6 +43,27 @@ protected:
     Eigen::ArrayXXcd expected_transf;
 };
 
+TEST_F(fourierImageTests, assignmentOperatorWorks) {
+    FourierImage image_1ch_copy = image_1ch;
+    ASSERT_EQ(image_1ch_copy.getChannels(), image_1ch.getChannels());
+
+    for (int j = 0; j < image_1ch.getWidth(); j++) {
+        for (int k = 0; k < image_1ch.getHeight(); k++) {
+            ASSERT_EQ(image_1ch_copy.getTransform()(j, k), image_1ch.getTransform()(j, k));
+        }
+    }
+}
+
+TEST_F(fourierImageTests, copyConstructorWorks) {
+    FourierImage image_1ch_copy(image_1ch);
+    ASSERT_EQ(image_1ch_copy.getChannels(), image_1ch.getChannels());
+
+    for (int j = 0; j < image_1ch.getWidth(); j++) {
+        for (int k = 0; k < image_1ch.getHeight(); k++) {
+            ASSERT_EQ(image_1ch_copy.getTransform()(j, k), image_1ch.getTransform()(j, k));
+        }
+    }
+}
 
 TEST_F(fourierImageTests, applyTransformComputesFTCorrectly) {
  // test 3 channel image
