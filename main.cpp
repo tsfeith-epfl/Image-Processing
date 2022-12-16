@@ -175,10 +175,11 @@ int main(int argc, char **argv) {
         cout << "\tOutput file: " << output_name << endl;
 
         try {
-            FourierImage fourier_image(input_name);
+            FourierImage fourier_image(image);
             cout << "Applying Fourier Transform..." << endl;
             fourier_image.applyTransform(SHOW_FOURIER_PROGRESS);
             FourierImage original_fourier_image = fourier_image;
+
 
             if (FILTER_TYPE == "band") {
                 fourier_image.applyBandPassFilter(LOW_CUTOFF, HIGH_CUTOFF);
@@ -199,6 +200,7 @@ int main(int argc, char **argv) {
             }
 
             filtered.save(output_name, true);
+
         }
         catch (exception &e) {
             cerr << "Error: " << e.what() << endl;
